@@ -1,10 +1,13 @@
 <template>
     <div id="homepage">
-       <div v-if="loginStatus">
+       <div v-if="loginStatus" id="display">
+            <transition name="info">
+            <info-page v-if="info"></info-page>
+            <!-- <info-page></info-page> -->
+           </transition>
            <top-bar></top-bar>
            <page-content></page-content>
            <bottom-bar></bottom-bar>
-           <info-page></info-page>
        </div>
        <div v-else>
            <router-link to="/signin"></router-link>
@@ -18,6 +21,7 @@ import TopBar from "../components/topbar.vue"
 import BottomBar from "../components/bottombar.vue"
 import PageContent from "../components/content.vue"
 import InfoPage from "../components/infopage.vue"
+
     export default {
         name:"landing-page",
         components:{
@@ -25,6 +29,7 @@ import InfoPage from "../components/infopage.vue"
             BottomBar,
             PageContent,
             InfoPage
+
         },
         data() {
             return {
@@ -34,7 +39,11 @@ import InfoPage from "../components/infopage.vue"
         computed: {
             token() {
                 return cookies.get("loginToken")
-            }
+            },
+            info(){
+                return this.$store.state.infoForm
+            },
+            
         },
         methods: {
             loginCheck() {
@@ -43,7 +52,7 @@ import InfoPage from "../components/infopage.vue"
                 } else{
                 this.$router.push("/signin")
                 }
-            }
+            },
         },
         mounted () {
             this.loginCheck();
@@ -57,11 +66,15 @@ import InfoPage from "../components/infopage.vue"
     min-height: 100vh;
     background-color:#EFF7F6;
     position: relative;
+    #display{
+        position: relative;
+    }
     #top-bar{
         position: sticky;
+        width: 100%;
         background-color: #B2F7EF;
         height: 8vh;
-        top:0
+        top: 0vw;
     }
     #content{
         background-color: wheat;
@@ -74,13 +87,21 @@ import InfoPage from "../components/infopage.vue"
         height: 8vh;
         bottom: 0;
     }
-    #info-page{
-        width: 60vw;
-        height: auto;
-        min-height: 50vh;
-        position: absolute;
-        top: 0;
-        left: 0;
+     #info-page{
+    z-index: 99;
+    width: 60vw;
+    height: 60vh;
+    background-color:white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    // transform: translateX(-100%);
+    }
+    .info-enter, .info-leave-to{
+    transform: translateX(-100%);
+    }
+    .info-enter-active, .info-leave-active{
+    transition: transform 0.5s linear
     }
 }
 
