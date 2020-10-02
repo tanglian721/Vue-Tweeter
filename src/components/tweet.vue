@@ -4,10 +4,10 @@
             <img src="../assets/user (2).png" alt="" id="userImg">
             <div id="text-area">
                 <div id="name-date">
-                    <h3 id="name">taylor</h3>
-                    <h3 id="date">2020-9-21</h3>
+                    <h3 id="name">{{ tweet.username }}</h3> 
+                    <h6 id="date">{{ tweet.created_at }}</h6>
                 </div>
-                <p id="tweet-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam sed facere quidem, voluptate, voluptatum obcaecati optio rem cupiditate aliquam sit necessitatibus voluptatibus. Facilis maiores quas fuga reiciendis nam laudantium autem.</p>
+                <p id="tweet-text">{{ tweet.content }}</p>
                 <div id="comment-like">
                     <h5 id="comment">
                         <img src="../assets/speech.png" alt="">
@@ -16,6 +16,9 @@
                     <h5 id="like">
                         <img src="../assets/heart.png" alt="">
                         <span id="like-active">4</span>
+                    </h5>
+                    <h5>
+                       <img id="edit" src="../assets/edit.png" alt="">
                     </h5>
                 </div>
                 <div id="comment-area">
@@ -34,23 +37,33 @@
         name:"single-tweet",
         components:{
             TweetComment
-        }
+        },
+         props:{
+            tweet:{
+               type:Object,
+               requried: true
+            }
+        },
     }
 </script>
 
 <style lang="scss" scoped>
 #tweet-content{
+    margin-top: 2vh;
     display: grid;
     grid-template-columns: 1fr 5fr;
     >img{
         width: 10vw;
     }
     #name-date{
-        display: flex;
-        justify-content: space-between;
-        h3{
-        display: inline-block;
-        }
+        position: relative;
+           h3{
+               border-bottom:1px solid rgba($color: #000000, $alpha: 0.2);
+           }
+           h6{
+              position: absolute;
+              right: 1vw;
+           }
     }
     #tweet-text{
         margin-top: 2vh;
@@ -66,14 +79,15 @@
             }
         }
     }
+   
     
 
-    #splitter{
-        height: 2px;
-        width: 99vw;
-        margin-left: -10%;
-        background-color:rgba($color: #000000, $alpha: 0.2);
-    }
 }
+    // #splitter{
+    //     margin-top: 2vh;
+    //     height: 1px;
+    //     width: 100%;
+    //     background-color:rgba($color: #000000, $alpha: 0.2);
+    // }
 
 </style>

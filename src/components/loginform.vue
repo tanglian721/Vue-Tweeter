@@ -42,6 +42,9 @@ import cookies from "vue-cookies"
                     console.log(response)
                     this.loginStatus = "Success"
                     cookies.set("loginToken",response.data.loginToken)
+                    cookies.set("logininfo",response.data)
+                    this.$store.commit("userinfo")
+                    this.$router.push("/")
                 }).catch((error)=>{
                     console.log(error)
                     this.loginStatus = "Error"

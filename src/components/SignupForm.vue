@@ -46,8 +46,10 @@ import cookies from "vue-cookies"
                   }
                 }).then((response)=>{
                     console.log(response)
-                    cookies.set("token",response.data[0].loginToken)
-
+                    cookies.set("loginToken",response.data.loginToken)
+                    cookies.set("logininfo",response.data)
+                    this.$store.commit("userinfo")
+                    this.$router.push("/")
                 }).catch((error)=>{
                     console.log(error)
                 })

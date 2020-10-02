@@ -2,12 +2,17 @@
     <div id="homepage">
        <div v-if="loginStatus" id="display">
             <transition name="info">
-            <info-page v-if="info"></info-page>
-            <!-- <info-page></info-page> -->
-           </transition>
-           <top-bar></top-bar>
-           <page-content></page-content>
-           <bottom-bar></bottom-bar>
+               <info-page v-if="info" ></info-page>
+            </transition>
+            <transition name="infoBg">
+                <div v-if="info" id="infor-background" @click="infoDisplay"></div>
+            </transition>
+            <top-bar></top-bar>
+            <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
+                <create-tweet v-if="createNew"></create-tweet>
+            </transition>
+            <page-content></page-content>
+            <bottom-bar></bottom-bar>
        </div>
        <div v-else>
            <router-link to="/signin"></router-link>
@@ -21,15 +26,15 @@ import TopBar from "../components/topbar.vue"
 import BottomBar from "../components/bottombar.vue"
 import PageContent from "../components/content.vue"
 import InfoPage from "../components/infopage.vue"
-
+import CreateTweet from "../components/createTweet.vue"
     export default {
         name:"landing-page",
         components:{
             TopBar,
             BottomBar,
             PageContent,
-            InfoPage
-
+            InfoPage,
+            CreateTweet
         },
         data() {
             return {
@@ -43,16 +48,27 @@ import InfoPage from "../components/infopage.vue"
             info(){
                 return this.$store.state.infoForm
             },
+            createNew(){
+                return this.$store.state.createArea
+            }
             
         },
         methods: {
+            hi(){
+                console.log("asd")
+            },
             loginCheck() {
                 if(this.token != undefined){
-                   this.loginStatus = true
+                   this.loginStatus = true,
+                   this.$store.commit("userinfo")
+
                 } else{
                 this.$router.push("/signin")
                 }
             },
+            infoDisplay() {
+                this.$store.commit("infoHide")
+            }
         },
         mounted () {
             this.loginCheck();
@@ -61,15 +77,19 @@ import InfoPage from "../components/infopage.vue"
 </script>
 
 <style lang="scss" scoped>
+@import url(https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css);
 #homepage{
+    z-index: 1;
     width:100vw;
     min-height: 100vh;
     background-color:#EFF7F6;
     position: relative;
     #display{
+        z-index: 2;
         position: relative;
     }
     #top-bar{
+        z-index: 20;
         position: sticky;
         width: 100%;
         background-color: #B2F7EF;
@@ -77,31 +97,55 @@ import InfoPage from "../components/infopage.vue"
         top: 0vw;
     }
     #content{
-        background-color: wheat;
+        z-index: 10;
+        // background-color: wheat;
         min-height: 120vh;;
     }
     #bottom-bar{
+        z-index: 24;
         width: 100%;
         position: sticky;
         background-color: white;
         height: 8vh;
         bottom: 0;
     }
-     #info-page{
+    #info-page{
+    position: relative;
     z-index: 99;
-    width: 60vw;
-    height: 60vh;
-    background-color:white;
+     width: 60vw;
+    height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    // transform: translateX(-100%);
+    }
+    #create-tweet{
+        width: 80%;
+        min-height: 30vh;
+        border-radius: 30px;
+        background-color: white;
+        position: fixed;
+        top: 30vh;
+        left: 10%;
+        filter: drop-shadow(2px 2px 5px gray);
     }
     .info-enter, .info-leave-to{
     transform: translateX(-100%);
     }
     .info-enter-active, .info-leave-active{
     transition: transform 0.5s linear
+    }
+    .infoBg-enter, .infoBg-leave-to{
+    opacity: 0;
+    }
+    .infoBg-enter-active, .infoBg-leave-active{
+    transition: opacity 0.5s linear
+    }
+    #infor-background{
+    position: absolute;
+    z-index: 50;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.3);
     }
 }
 

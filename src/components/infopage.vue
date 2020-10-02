@@ -2,8 +2,10 @@
     <div id="info-page">
         <img id="userImg" src="../assets/user.png" alt="">
         <div id="userInfo">
-            <p id="user">user</p>
-            <p id="email">user@gmail.com</p>
+            <p id="user">{{  user  }}</p>
+            <p id="email">{{  email  }}</p>
+            <p id="birthday">{{ birthday }}</p>
+            <p id="bio">{{ bio }}</p>
             <p id="follow">
                <span id="following">following : 2</span>
                <span id="follower"> follower :4</span>
@@ -11,7 +13,7 @@
         </div>
         <div id="userFunction">
              <h3 id="profile">
-                 <img src="../assets/user (1).png" alt="">
+                 <img src="../assets/user (1).png" alt="" @click="profile">
                  Profile
              </h3>
              <h3 id="list">
@@ -23,27 +25,62 @@
                  Topic
              </h3>
         </div>
-        <button @click="infoDisplay">HIDE</button>
+         <span id="logout" @click="logout">Logout</span>
+
+      
     </div>
 </template>
 
 <script>
+import cookies from "vue-cookies"
     export default {
         name:"info-page",
-        methods: {
-            infoDisplay() {
-                console.log("1")
-                this.$store.commit("infoHide")
+        data() {
+            return {
+                user: "name",
+                email:"email",
+                birthday: "birthday",
+                bio: "bio"
             }
+        },
+        methods: {
+            loading(){
+                this.user = this.userinfo.username,
+                this.email = this.userinfo.email,
+                this.birthday = this.userinfo.birthdate,
+                this.bio = this.userinfo.bio
+            },
+            profile(){
+                this.$router.push("/profile")
+                 this.$store.commit("infoHide")
+            },
+            logout(){
+                cookies.remove("logininfo")
+                cookies.remove("loginToken")
+                this.$router.push("/signin")
+            }
+
+        },
+        computed: {
+            userinfo() {
+                return this.$store.state.userinfo
+            }
+        },
+        mounted () {
+            this.loading();
         },
     }
 </script>
 
 <style lang="scss" scoped>
 #info-page{
+    position: absolute;
+    z-index: 99;
+    width: 60vw;
+    height: 60vh;
     display: grid;
     align-content: start;
-
+    background-color:white;
     #userImg{
         position: relative;
         width:20vw;
@@ -55,7 +92,7 @@
         width: 100%;
         padding: 1vh 0;
         p{
-           padding-left: 5vw;
+           padding: 0 5vw;
            margin: 1vh 0 ;
         }
         border-bottom: 1px solid rgba($color: #000000, $alpha: 0.5);
@@ -71,7 +108,27 @@
             };
         }
     }
+     #logout{
+            position: relative;
+            background-color: #B2F7EF;
+            border: none;
+            width: 12vw;
+            color: white;
+            padding: 0.4rem;
+            border-radius: 04rem;
+            margin-left:40vw;
+            top: 4vh;
+            filter: drop-shadow(2px 2px 5px gray);
+        }
+    
 }
+#infor-background{
+    position: absolute;
+    z-index: 50;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    }
 button{
     position: absolute;
     right: 10vw;

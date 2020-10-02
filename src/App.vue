@@ -10,6 +10,6 @@
   margin: 0;
   padding: 0;
 }
-$primaryColor:#16BDDF
+$primaryColor:"#16BDDF"
 
 </style>
