@@ -97,7 +97,7 @@ import CreateTweet from "../components/createTweet.vue"
         top: 0vw;
     }
     #content{
-        z-index: 10;
+        z-index: 5;
         // background-color: wheat;
         min-height: 120vh;;
     }

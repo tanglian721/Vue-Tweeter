@@ -1,13 +1,14 @@
 <template>
-    <div>
-        <div id="tweet-content">
-            <img src="../assets/user (2).png" alt="" id="userImg">
-            <div id="text-area">
+    <div id="one-tweet-page">
+      <top-bar></top-bar>
+      <div id="tweetArea">
+          <img src="../assets/user (2).png" alt="" id="userImg">
+          <div id="text-area">
                 <div id="name-date">
                     <h3 id="name" @click="toUserPage">{{ tweet.username }}</h3> 
                     <h6 id="date">{{ tweet.created_at }}</h6>
                 </div>
-                <p id="tweet-text" @click="toOneTweetPage">{{ tweet.content }}</p>
+                <p id="tweet-text" >{{ tweet.content }}</p>
                 <div id="comment-like">
                     <h5 id="comment">
                         <img src="../assets/speech.png" alt="" @click="getComments">
@@ -24,7 +25,7 @@
                        <img v-if="tweet.username == user.username" id="delete" src="../assets/delete (1).png" @click="deleteShow">
                     </h5>
                 </div>
-                <div id="deleteDiv" v-if="deleteDisplay">
+                <!-- <div id="deleteDiv" v-if="deleteDisplay">
                     <div v-if="deleteStatus == 'on'" class="message">
                      <h2 >Are you sure to delete this tweet?</h2>
                      <span @click="backHome" id="back">Back</span> 
@@ -40,31 +41,28 @@
                      <span @click="deleteTweet" >DELETE AGAIN</span>   
                     </div>
                 </div>
-                <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet>
-                <div id="comment-area">
-                    <div id="comment-splitter"></div>
-                    <tweet-comment ></tweet-comment>
-                </div>
-            </div>
-        </div>
-        <div id="splitter"></div>
+                <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet> -->
+                <div id="comment-area"></div>
+          </div>
+      </div>
+      <bottom-bar></bottom-bar>
     </div>
 </template>
 
 <script>
-    import TweetComment from "./comment.vue"
-    import EditTweet from "./editTweet.vue"
+import TopBar from "../components/topbar.vue"
+import BottomBar from "../components/bottombar.vue"
     import axios from "axios"
     import cookies from "vue-cookies"
-
     export default {
-        name:"single-tweet",
-        components:{
-            TweetComment,
-            EditTweet
+        name: "onetweet-page",
+          components:{
+            TopBar,
+            BottomBar,
         },
         data() {
             return {
+                tweet:"",
                 comments: [],
                 editDisplay:false,
                 deleteDisplay:false,
@@ -74,14 +72,6 @@
             }
         },
         props:{
-            tweet:{
-               type:Object,
-               requried: true
-            },
-            editTweet:{
-               type:Object,
-               requried: true
-            },
             comment:{
                 type:Object,
                 requried:true
@@ -90,6 +80,30 @@
         methods: {
             test(){
                 console.log(this.tweetAllByDate)
+            },
+            getOneTweet(){
+                
+                console.log(this.tweetId)
+                
+                axios.request({
+                    url: "https://tweeterest.ml/api/tweets",
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    data:{
+                        "tweetId":this.tweetId
+                  }
+                }).then((response) => {
+                    console.log(response.data)
+                    this.tweet = response.data
+                    // this.comments = response.data
+                    // console.log(this.comments)
+                }).catch((error) => {
+                    console.log("1212")
+                    console.log(error)
+                })
             },
             edit() {
                 this.editDisplay = true
@@ -110,11 +124,6 @@
                 console.log(this.tweet.userId)
                 this.$store.commit("DispalyUserIDget", this.tweet.userId)
                 this.$router.push("/user")
-            },
-            toOneTweetPage(){
-                this.$store.commit("tweetIdget", this.tweet.tweetId)
-                console.log(this.tweet.tweetId)
-                this.$router.push("/tweet")
             },
             deleteTweet() {
                 axios.request({
@@ -160,7 +169,6 @@
                 })
             },
             getLike() {
-                console.log(this.tweet.tweetId)
                 axios.request({
                     url: "https://tweeterest.ml/api/tweet-likes",
                     method: "get",
@@ -169,7 +177,7 @@
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
                     data:{
-                        "tweetId":this.tweet.tweetId
+                        "tweetId":this.tweetId
                   }
                 }).then((response) => {
                     console.log(response.data)
@@ -190,21 +198,40 @@
             },
             token() {
                 return cookies.get("loginToken")
+            },
+            tweetId(){
+                return this.$store.state.tweetId
             }
         },
-        
+        mounted () {
+            this.getOneTweet();
+        },
+         
     }
 </script>
 
 <style lang="scss" scoped>
-#tweet-content{
-    margin-top: 2vh;
-    display: grid;
-    grid-template-columns: 1fr 5fr;
-    >img{
-        width: 10vw;
+    #one-tweet-page{
+        min-height: 100vh;
     }
-    #name-date{
+    #top-bar{
+        z-index: 20;
+        position: sticky;
+        width: 100%;
+        background-color: #B2F7EF;
+        height: 8vh;
+        top: 0vw;
+    }
+    #tweetArea{
+        min-height: 84vh;
+        margin-top: 2vh;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 5fr;
+        >img{
+            width: 10vw;
+        }
+        #name-date{
         z-index: 6;
            h3{
                z-index: 6;
@@ -272,13 +299,14 @@
             background-color: #B2F7EF;
         }
    }
-
-}
-    // #splitter{
-    //     margin-top: 2vh;
-    //     height: 1px;
-    //     width: 100%;
-    //     background-color:rgba($color: #000000, $alpha: 0.2);
-    // }
-
+    }
+    
+    #bottom-bar{
+        z-index: 24;
+        width: 100%;
+        position: sticky;
+        background-color: white;
+        height: 8vh;
+        bottom: 0;
+    }
 </style>

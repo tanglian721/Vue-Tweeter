@@ -1,7 +1,7 @@
 <template>
     <div id="info-page">
         <img id="userImg" src="../assets/user.png" alt="">
-        <div id="userInfo">
+        <div id="userInfo" @click="userPage">
             <p id="user">{{  user  }}</p>
             <p id="email">{{  email  }}</p>
             <p id="birthday">{{ birthday }}</p>
@@ -58,6 +58,11 @@ import cookies from "vue-cookies"
                 cookies.remove("logininfo")
                 cookies.remove("loginToken")
                 this.$router.push("/signin")
+            },
+            userPage(){
+                this.$store.commit("DispalyUserIDget", this.userinfo.userId)
+                this.$router.push("/user")
+
             }
 
         },

@@ -6,10 +6,7 @@
 </template>
 
 <script>
-    import SingleTweet from "./tweet.vue"
-    import axios from "axios"
-    // import cookies from "vue-cookies"
-     
+    import SingleTweet from "./tweet"  
     export default {
         name:"page-content",
         components:{
@@ -17,7 +14,7 @@
         },
         data() {
             return {
-                tweets: []
+                // tweets: []
             }
         },
         props:{
@@ -28,23 +25,14 @@
         },
         methods: {
             alltweetGet() {
-                axios.request({
-                    url:"https://tweeterest.ml/api/tweets",
-                    method:"get",
-                    headers:{
-                    "Content-Type":"application/json",
-                    "X-Api-Key":"57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-                  }
-                }).then((response)=> {
-                    console.log(response.data)
-                    this.tweets = response.data
-                    this.$store.commit("getHomePageTweets", response.data)
-                }).catch((error)=>{
-                    console.log("1212")
-                    console.log(error)
-                })
+                this.$store.dispatch("alltweetGet")
             }
          
+        },
+        computed: {
+            tweets() {
+                return this.$store.getters.tweetAllByDate 
+            }
         },
         mounted () {
         },

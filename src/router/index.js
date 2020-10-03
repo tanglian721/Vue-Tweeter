@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import LandingPage from "../views/homepage.vue"
 import SigninPage from "../views/SigninPage.vue"
 import ProfilePage from "../views/profilepage.vue"
+import UserPage from "../views/userpage.vue"
+import OnetweetPage from "../views/oneTweetpage.vue"
 
 Vue.use(VueRouter);
 
@@ -20,6 +22,16 @@ const routes = [{
         path: "/profile",
         name: "profile-page",
         component: ProfilePage
+    },
+    {
+        path: "/user",
+        name: "user-page",
+        component: UserPage
+    },
+    {
+        path: "/tweet",
+        name: "onetweet-page",
+        component: OnetweetPage
     },
 
 
