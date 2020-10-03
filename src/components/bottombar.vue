@@ -1,6 +1,6 @@
 <template>
     <div id="bottom-bar">
-        <img src="../assets/home.png" alt="">
+        <img src="../assets/home.png" alt="" @click="home">
         <img src="../assets/loupe.png" alt="">
         <img src="../assets/email.png" alt="">
         <img id="createBtn" src="../assets/createBtn.png" @click="createNew">
@@ -13,6 +13,9 @@
         methods: {
             createNew() {
                 this.$store.commit("createShow")
+            },
+            home(){
+                this.$router.push("/")
             }
         },
     }

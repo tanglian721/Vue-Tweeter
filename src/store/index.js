@@ -14,7 +14,8 @@ export default new Vuex.Store({
         createArea: false,
         homePageTweets: [],
         DisplayUserID: "",
-        tweetId: ""
+        tweetId: "",
+        singleTweet: ""
     },
     mutations: {
         signUpDisplay: function(state) {
@@ -74,7 +75,7 @@ export default new Vuex.Store({
                     "Content-Type": "application/json",
                     "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                 },
-                data: {
+                params: {
                     "userId": this.state.DisplayUserID
                 }
             }).then((response) => {

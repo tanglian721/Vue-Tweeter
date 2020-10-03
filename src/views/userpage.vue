@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="userpage">
       <div id="top">
         <div id="back" @click="backHome"><img src="../assets/back.png" alt=""></div>
         </div>
@@ -12,14 +12,16 @@
             <p>
                 <span>{{  email  }}</span>
             </p>
-            <p>
+            <p id="bio">
              Bio: 
-                <span>{{  bio  }}</span>
+                <span >{{  bio  }}</span>
             </p>  
                 <span id="following">following : 2</span>
                 <span id="follower"> follower :4</span>
         </div>
         <single-content></single-content>
+        <bottom-bar></bottom-bar>
+
     </div>
 </template>
 
@@ -27,12 +29,15 @@
 import cookies from "vue-cookies"
 import axios from "axios"
 import SingleContent from "../components/singlePersongContent"
+import BottomBar from "../components/bottombar.vue"
 
 
     export default {
         name: "user-single",
         components:{
-            SingleContent
+            SingleContent,
+            BottomBar,
+
         },
         data() {
             return {
@@ -56,15 +61,15 @@ import SingleContent from "../components/singlePersongContent"
                         "Content-Type": "application/json",
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
-                    data:{
+                    params:{
                         userId:this.userDisplayId
                     }
                 }).then((response) => {
-                    console.log(this.userDisplayId)
-                     this.user = response.data[2].username,
-                     this.email = response.data[2].email,
-                     this.birthday = response.data[2].birthdate,
-                     this.bio = response.data[2].bio
+                    console.log(response.data)
+                     this.user = response.data[0].username,
+                     this.email = response.data[0].email,
+                     this.birthday = response.data[0].birthdate,
+                     this.bio = response.data[0].bio
                 }).catch((error) => {
                     console.log("1212")
                     console.log(error)
@@ -128,6 +133,11 @@ import SingleContent from "../components/singlePersongContent"
 </script>
 
 <style lang="scss" scoped>
+#userPage{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
     #top{
         width: 100%;
         height: 20vh;
@@ -140,7 +150,7 @@ import SingleContent from "../components/singlePersongContent"
             height: 8vw;
             background-color: rgba($color: #000000, $alpha: 0.5);
             border-radius: 50%;
-            img{
+            >img{
                 width: 4vw;
                 margin: 2vw;
             }
@@ -155,13 +165,26 @@ import SingleContent from "../components/singlePersongContent"
       #userInfo{
             position: relative;
             top: -13vw;
-            left: 10vw;
+            margin-left: 10vw;
             p{
-              font-size: 1.2rem;
+              font-size: 1rem;
               span{
 
               margin-right: 20vw;
               }
+              
             }
+            #bio{
+                  width: 80vw;
+              }
         }
+     #bottom-bar{
+        z-index: 24;
+        width: 100%;
+        position: sticky;
+        background-color: white;
+        height: 8vh;
+        bottom: 0;
+    }
+
 </style>

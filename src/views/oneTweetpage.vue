@@ -12,11 +12,12 @@
                 <div id="comment-like">
                     <h5 id="comment">
                         <img src="../assets/speech.png" alt="" @click="getComments">
-                        <span id="comment-number">3</span>
+                        <span id="comment-number">{{ commentsNumber }}</span>
                     </h5>
                     <h5 id="like">
-                        <img src="../assets/heart.png" alt="" @click="getLike">
-                        <span id="like-active">4</span>
+                        <img src="../assets/heart-red.png" alt="" v-if="likesNumber > 0" @click="getLike">
+                        <img src="../assets/heart.png" alt="" v-else @click="getLike">
+                        <span id="like-active">{{ likesNumber }}</span>
                     </h5>
                     <h5>
                        <img v-if="tweet.username == user.username" id="edit" src="../assets/edit.png" alt="" @click="edit">
@@ -25,7 +26,7 @@
                        <img v-if="tweet.username == user.username" id="delete" src="../assets/delete (1).png" @click="deleteShow">
                     </h5>
                 </div>
-                <!-- <div id="deleteDiv" v-if="deleteDisplay">
+                <div id="deleteDiv" v-if="deleteDisplay">
                     <div v-if="deleteStatus == 'on'" class="message">
                      <h2 >Are you sure to delete this tweet?</h2>
                      <span @click="backHome" id="back">Back</span> 
@@ -41,8 +42,24 @@
                      <span @click="deleteTweet" >DELETE AGAIN</span>   
                     </div>
                 </div>
-                <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet> -->
-                <div id="comment-area"></div>
+                <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet>
+                <div id="comment-area">
+                    <tweet-comment v-for="comment in comments" :key="comment.commentID" :comment=comment></tweet-comment>
+                    <div id="write-comment">
+                        <div class="submit" v-if="submit == 'on'">
+                            <textarea name="" id="new-comment" cols="30" rows="10" v-model="commentContent" ></textarea>
+                            <br>
+                            <button id="create" @click="createComment">submit</button>
+                        </div>
+                        <div class="submit" v-else-if="submit == true">
+                             <h2 >Tweet Created Sucessful!</h2>
+                        </div>
+                        <div class="submit" v-else-if="submit == false">
+                            <h2 >{{submit}} </h2>
+                            <span @click="reCreate" >Write Again</span>   
+                        </div>
+                    </div>
+                </div>
           </div>
       </div>
       <bottom-bar></bottom-bar>
@@ -52,23 +69,29 @@
 <script>
 import TopBar from "../components/topbar.vue"
 import BottomBar from "../components/bottombar.vue"
-    import axios from "axios"
-    import cookies from "vue-cookies"
+import TweetComment from "../components/comment.vue"
+import axios from "axios"
+import cookies from "vue-cookies"
     export default {
         name: "onetweet-page",
           components:{
             TopBar,
             BottomBar,
+            TweetComment
         },
         data() {
             return {
                 tweet:"",
                 comments: [],
+                commentsNumber:"",
+                likesNumber:"",
                 editDisplay:false,
                 deleteDisplay:false,
                 deleteId:"",
                 deleteStatus:"on",
-                errorInfo:""
+                errorInfo:"",
+                submit:"on",
+                commentContent:"What is your comment"
             }
         },
         props:{
@@ -82,28 +105,7 @@ import BottomBar from "../components/bottombar.vue"
                 console.log(this.tweetAllByDate)
             },
             getOneTweet(){
-                
-                console.log(this.tweetId)
-                
-                axios.request({
-                    url: "https://tweeterest.ml/api/tweets",
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-                    },
-                    data:{
-                        "tweetId":this.tweetId
-                  }
-                }).then((response) => {
-                    console.log(response.data)
-                    this.tweet = response.data
-                    // this.comments = response.data
-                    // console.log(this.comments)
-                }).catch((error) => {
-                    console.log("1212")
-                    console.log(error)
-                })
+                this.tweet = cookies.get("singleTweet")
             },
             edit() {
                 this.editDisplay = true
@@ -124,6 +126,38 @@ import BottomBar from "../components/bottombar.vue"
                 console.log(this.tweet.userId)
                 this.$store.commit("DispalyUserIDget", this.tweet.userId)
                 this.$router.push("/user")
+            },
+            reCreate(){
+                this.submit = "on"
+            },
+            createComment(){
+                console.log(this.tweet.tweetId)
+                console.log(this.token)
+                console.log(this.commentContent)
+                axios.request({
+                    url:"https://tweeterest.ml/api/comments",
+                    method:"post",
+                    headers:{
+                    "Content-Type":"application/json",
+                    "X-Api-Key":"57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                  },
+                    data:{
+                    "loginToken": this.token,
+                    "tweetId": this.tweet.tweetId,
+                    "content": this.commentContent
+                  }
+                }).then((response)=>{
+                    console.log(response)
+                    this.submit = true
+                    setTimeout(() => {
+                        this.submit = "on"
+                        this.getComments()
+                    }, 2000);
+                }).catch((errorMessage)=>{
+                    this.submit = false,
+                    console.log(errorMessage)
+                    this.errorInfo = errorMessage
+                })
             },
             deleteTweet() {
                 axios.request({
@@ -156,12 +190,13 @@ import BottomBar from "../components/bottombar.vue"
                         "Content-Type": "application/json",
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
-                    data:{
+                    params:{
                         "tweetId":this.tweet.tweetId
                   }
                 }).then((response) => {
                     console.log(response.data)
-                    // this.comments = response.data
+                    this.commentsNumber = response.data.length
+                    this.comments = response.data
                     // console.log(this.comments)
                 }).catch((error) => {
                     console.log("1212")
@@ -181,6 +216,7 @@ import BottomBar from "../components/bottombar.vue"
                   }
                 }).then((response) => {
                     console.log(response.data)
+                    this.likesNumber = response.data.length
                     // this.comments = response.data
                     // console.log(this.comments)
                 }).catch((error) => {
@@ -205,6 +241,8 @@ import BottomBar from "../components/bottombar.vue"
         },
         mounted () {
             this.getOneTweet();
+            this.getComments();
+            this.getLike()
         },
          
     }
@@ -228,6 +266,7 @@ import BottomBar from "../components/bottombar.vue"
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 5fr;
+        justify-items: center;
         >img{
             width: 10vw;
         }
@@ -244,6 +283,7 @@ import BottomBar from "../components/bottombar.vue"
     }
     #tweet-text{
         margin-top: 2vh;
+        margin-right: 5vw;
     }
     #comment-like{
         display: flex;
@@ -300,7 +340,18 @@ import BottomBar from "../components/bottombar.vue"
         }
    }
     }
-    
+    #write-comment{
+        margin-top: 2vh;
+        margin-left: 12vw;
+        #new-comment{
+            height: 10vh;
+            width: 90%;
+        }
+        #create{
+            font-size: 1rem;
+            
+        }
+    }
     #bottom-bar{
         z-index: 24;
         width: 100%;

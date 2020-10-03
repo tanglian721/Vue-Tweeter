@@ -1,11 +1,12 @@
 <template>
     <div id="content">
-        <button @click="singleTweetsGet">get</button> 
+        <!-- <button @click="singleTweetsGet">get</button>  -->
         <div v-if="followBtn">
             <span class="follow" v-if="unfollow" @click="followUser">follow</span>
             <span class="follow" id="following" v-else @click="unfollowUser">following</span>
         </div>
         <single-tweet class="tweet" v-for="tweet in tweets" v-bind:key="tweet.tweetId" :tweet=tweet ></single-tweet>
+
     </div>
 </template>
 
@@ -13,10 +14,12 @@
     import axios from "axios"
     import cookies from "vue-cookies"
     import SingleTweet from "./tweet"  
+
     export default {
         name:"single-content",
         components:{
             SingleTweet
+
         },
         data() {
             return {
@@ -46,7 +49,7 @@
                         "Content-Type": "application/json",
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
-                    data:{
+                    params:{
                         "loginToken": this.token,
                         "tweetId":this.userDisplayId //what is followId
                     }
@@ -99,7 +102,7 @@
             }
         },
         mounted () {
-            this.show()
+            this. singleTweetsGet()
         },
     }
 </script>
@@ -129,4 +132,5 @@
     background-color:#B2F7EF ;
     color: white;
 }
+
 </style>

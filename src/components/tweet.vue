@@ -10,12 +10,12 @@
                 <p id="tweet-text" @click="toOneTweetPage">{{ tweet.content }}</p>
                 <div id="comment-like">
                     <h5 id="comment">
-                        <img src="../assets/speech.png" alt="" @click="getComments">
-                        <span id="comment-number">3</span>
+                        <img src="../assets/speech.png" alt="" @click="commentDisplay = !commentDisplay">
+                        <span id="comment-number">{{ commentsNumber }}</span>
                     </h5>
                     <h5 id="like">
                         <img src="../assets/heart.png" alt="" @click="getLike">
-                        <span id="like-active">4</span>
+                        <span id="like-active">{{ likesNumber }}</span>
                     </h5>
                     <h5>
                        <img v-if="tweet.username == user.username" id="edit" src="../assets/edit.png" alt="" @click="edit">
@@ -41,9 +41,9 @@
                     </div>
                 </div>
                 <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet>
-                <div id="comment-area">
+                <div v-if="commentDisplay" id="comment-area">
                     <div id="comment-splitter"></div>
-                    <tweet-comment ></tweet-comment>
+                     <tweet-comment  v-for="comment in comments" :key="comment.commentID" :comment=comment></tweet-comment>
                 </div>
             </div>
         </div>
@@ -68,6 +68,9 @@
                 comments: [],
                 editDisplay:false,
                 deleteDisplay:false,
+                commentDisplay:false,
+                commentsNumber:"",
+                likesNumber:"",
                 deleteId:"",
                 deleteStatus:"on",
                 errorInfo:""
@@ -113,6 +116,7 @@
             },
             toOneTweetPage(){
                 this.$store.commit("tweetIdget", this.tweet.tweetId)
+                cookies.set("singleTweet", this.tweet)
                 console.log(this.tweet.tweetId)
                 this.$router.push("/tweet")
             },
@@ -147,12 +151,13 @@
                         "Content-Type": "application/json",
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
-                    data:{
+                    params:{
                         "tweetId":this.tweet.tweetId
                   }
                 }).then((response) => {
                     console.log(response.data)
-                    // this.comments = response.data
+                    this.commentsNumber = response.data.length
+                    this.comments = response.data
                     // console.log(this.comments)
                 }).catch((error) => {
                     console.log("1212")
@@ -168,11 +173,12 @@
                         "Content-Type": "application/json",
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
-                    data:{
+                    params:{
                         "tweetId":this.tweet.tweetId
                   }
                 }).then((response) => {
                     console.log(response.data)
+                    this.likesNumber = response.data.length
                     // this.comments = response.data
                     // console.log(this.comments)
                 }).catch((error) => {
@@ -191,6 +197,10 @@
             token() {
                 return cookies.get("loginToken")
             }
+        },
+        mounted () {
+            this.getComments();
+            this. getLike()
         },
         
     }

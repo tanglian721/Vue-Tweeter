@@ -51,7 +51,7 @@
                   },
                   data:{
                     "loginToken": this.token,
-                    "tweeId": this.editTweet.tweetId,
+                    "tweetId": this.editTweet.tweetId,
                     "content": this.editTweet.content
                   }
                 }).then((response)=>{
