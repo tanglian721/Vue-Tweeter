@@ -27,6 +27,7 @@ import BottomBar from "../components/bottombar.vue"
 import PageContent from "../components/content.vue"
 import InfoPage from "../components/infopage.vue"
 import CreateTweet from "../components/createTweet.vue"
+import axios from "axios"
     export default {
         name:"landing-page",
         components:{
@@ -42,9 +43,6 @@ import CreateTweet from "../components/createTweet.vue"
             }
         },
         computed: {
-            token() {
-                return cookies.get("loginToken")
-            },
             info(){
                 return this.$store.state.infoForm
             },
@@ -54,24 +52,54 @@ import CreateTweet from "../components/createTweet.vue"
             
         },
         methods: {
-            hi(){
-                console.log("asd")
-            },
             loginCheck() {
-                if(this.token != undefined){
-                   this.loginStatus = true,
-                   this.$store.commit("userinfo")
-
+                if(cookies.get("loginToken") != undefined){
+                   this.loginStatus = true;
                 } else{
                 this.$router.push("/signin")
                 }
             },
             infoDisplay() {
                 this.$store.commit("infoHide")
-            }
+            },
+            getFollows() {
+                console.log(cookies.get("logininfo"))
+                axios.request({
+                    url: "https://tweeterest.ml/api/follows",
+                    method: "get",
+                    headers: {
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    params:{
+                        userId:cookies.get("logininfo").userId
+                    }
+                }).then((response) => {
+                    this.$store.commit("userFollowing", response.data);
+                }).catch((error) => {
+                    console.log(error);
+                })
+            },
+            getFollowers() {
+                axios.request({
+                    url: "https://tweeterest.ml/api/followers",
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    params:{
+                        userId:this.userDisplayId
+                    }
+                }).then((response) => {
+                    this.$store.commit("userFollower", response.data);
+                }).catch((error) => {
+                    console.log(error);
+                })
+            },
         },
         mounted () {
             this.loginCheck();
+            this.getFollows()
         },
     }
 </script>

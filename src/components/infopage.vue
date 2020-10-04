@@ -2,13 +2,13 @@
     <div id="info-page">
         <img id="userImg" src="../assets/user.png" alt="">
         <div id="userInfo" @click="userPage">
-            <p id="user">{{  user  }}</p>
-            <p id="email">{{  email  }}</p>
+            <p id="user">{{ user }}</p>
+            <p id="email">{{ email }}</p>
             <p id="birthday">{{ birthday }}</p>
             <p id="bio">{{ bio }}</p>
             <p id="follow">
-               <span id="following">following : 2</span>
-               <span id="follower"> follower :4</span>
+               <span id="following">following : {{ following }}</span>
+               <span id="follower"> follower : {{ follower }}</span>
             </p>
         </div>
         <div id="userFunction">
@@ -44,37 +44,43 @@ import cookies from "vue-cookies"
             }
         },
         methods: {
-            loading(){
-                this.user = this.userinfo.username,
-                this.email = this.userinfo.email,
-                this.birthday = this.userinfo.birthdate,
-                this.bio = this.userinfo.bio
+            loading() {
+                this.user = this.userinfo.username;
+                this.email = this.userinfo.email;
+                this.birthday = this.userinfo.birthdate;
+                this.bio = this.userinfo.bio;
             },
-            profile(){
-                this.$router.push("/profile")
-                 this.$store.commit("infoHide")
+            profile() {
+                this.$router.push("/profile");
+                 this.$store.commit("infoHide");
             },
-            logout(){
-                cookies.remove("logininfo")
-                cookies.remove("loginToken")
-                this.$router.push("/signin")
+            logout() {
+                cookies.remove("logininfo");
+                cookies.remove("loginToken");
+                this.$router.push("/signin");
             },
-            userPage(){
-                this.$store.commit("DispalyUserIDget", this.userinfo.userId)
-                this.$router.push("/user")
-
+            userPage() {
+                cookies.set("userpageId", this.userinfo.userId );
+                this.$store.commit("infoHide");
+                this.$router.push("/user");
             }
 
         },
         computed: {
             userinfo() {
-                return this.$store.state.userinfo
+                return cookies.get("logininfo");
+            },
+            follower() {
+                return this.$store.state.follower.length;
+            },
+            following() {
+                return this.$store.state.following.length;
             }
         },
         mounted () {
             this.loading();
         },
-    }
+    }  
 </script>
 
 <style lang="scss" scoped>

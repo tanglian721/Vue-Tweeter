@@ -26,6 +26,7 @@
 
 <script>
     import axios from "axios"
+    import cookies from "vue-cookies"
     export default {
         name:"tweet-comment",
         props:{
@@ -53,7 +54,7 @@
                         "Content-Type": "application/json",
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
-                    data:{
+                    params:{
                         "tweetId":this.comment.commentID
                   }
                 }).then((response) => {
@@ -76,7 +77,7 @@
         },
         computed: {
              user() {
-                return this.$store.state.userinfo
+                return cookies.get("logininfo");
             },
         },
     }

@@ -86,7 +86,7 @@ import signUpApi from "axios"
         },
          computed: {
             userinfo() {
-                return this.$store.state.userinfo
+                return cookies.get("logininfo")
             },
             token() {
                 return cookies.get("loginToken")

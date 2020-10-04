@@ -70,6 +70,7 @@
 import TopBar from "../components/topbar.vue"
 import BottomBar from "../components/bottombar.vue"
 import TweetComment from "../components/comment.vue"
+import EditTweet from "../components/editTweet.vue"
 import axios from "axios"
 import cookies from "vue-cookies"
     export default {
@@ -77,7 +78,8 @@ import cookies from "vue-cookies"
           components:{
             TopBar,
             BottomBar,
-            TweetComment
+            TweetComment,
+            EditTweet
         },
         data() {
             return {
@@ -109,10 +111,10 @@ import cookies from "vue-cookies"
             },
             edit() {
                 this.editDisplay = true
+                console.log(this.editDisplay)
             },
             editHide(childData){
                 this.editDisplay = childData
-                console.log(this.editArea)
             },
             deleteShow(){
                 this.deleteDisplay = true
@@ -211,7 +213,7 @@ import cookies from "vue-cookies"
                         "Content-Type": "application/json",
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
-                    data:{
+                    params:{
                         "tweetId":this.tweetId
                   }
                 }).then((response) => {
@@ -227,7 +229,7 @@ import cookies from "vue-cookies"
         },
         computed: {
             user() {
-                return this.$store.state.userinfo
+                return cookies.get("logininfo")
             },
             tweetAllByDate(){
                 return this.$store.getters.tweetAllByDate

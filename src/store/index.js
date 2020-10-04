@@ -7,46 +7,50 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        userinfo: "",
         signUpForm: false,
         infoForm: false,
-        tweetAll: [],
         createArea: false,
+        oneUserTweet: [],
         homePageTweets: [],
-        DisplayUserID: "",
+        // DisplayUserID: "",
         tweetId: "",
-        singleTweet: ""
+        singleTweet: "",
+        following: "",
+        follower: ""
     },
     mutations: {
         signUpDisplay: function(state) {
-            state.signUpForm = !state.signUpForm
+            state.signUpForm = !state.signUpForm;
         },
         infoShow: function(state) {
-            state.infoForm = true
+            state.infoForm = true;
         },
         infoHide: function(state) {
-            state.infoForm = false
+            state.infoForm = false;
         },
         createShow: function(state) {
-            state.createArea = true
+            state.createArea = true;
         },
         createHide: function(state) {
-            state.createArea = false
+            state.createArea = false;
         },
-        userinfo: function(state) {
-            if (cookies.get("logininfo") != undefined) {
-                state.userinfo = cookies.get("logininfo")
-            }
+        userFollowing: function(state, array) {
+            state.following = array;
         },
-        DispalyUserIDget(state, id) {
-            state.DisplayUserID = id
+        userFollower: function(state, array) {
+            state.follower = array;
         },
+        // DispalyUserIDget(state, id) {
+        //     state.DisplayUserID = id
+        // },
         tweetIdget(state, id) {
-            state.tweetId = id
+            state.tweetId = id;
         },
         getHomeTweets: function(state, data) {
-            console.log(data)
-            state.homePageTweets = data
+            state.homePageTweets = data;
+        },
+        getOneUserTweets: function(state, data) {
+            state.oneUserTweet = data;
         }
     },
     actions: {
@@ -59,7 +63,7 @@ export default new Vuex.Store({
                     "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                 }
             }).then((response) => {
-                context.commit("getHomeTweets", response.data)
+                context.commit("getHomeTweets", response.data);
             }).catch((error) => {
                 console.log("1212")
                 console.log(error)
@@ -76,11 +80,11 @@ export default new Vuex.Store({
                     "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                 },
                 params: {
-                    "userId": this.state.DisplayUserID
+                    "userId": cookies.get("userpageId")
                 }
             }).then((response) => {
                 console.log(response)
-                context.commit("getHomeTweets", response.data)
+                context.commit("getOneUserTweets", response.data)
             }).catch((error) => {
                 console.log("1212")
                 console.log(error)

@@ -14,8 +14,14 @@
                         <span id="comment-number">{{ commentsNumber }}</span>
                     </h5>
                     <h5 id="like">
-                        <img src="../assets/heart.png" alt="" @click="getLike">
-                        <span id="like-active">{{ likesNumber }}</span>
+                        <div v-if="likeCheck">
+                             <img  src="../assets/heart-red.png" alt="" @click="like">
+                             <span id="like-active">{{ likesNumber }}</span>
+                        </div>
+                        <div v-else>
+                            <img  src="../assets/heart.png" alt="" @click="like">
+                            <span id="like-active">{{ likesNumber }}</span>
+                        </div>
                     </h5>
                     <h5>
                        <img v-if="tweet.username == user.username" id="edit" src="../assets/edit.png" alt="" @click="edit">
@@ -71,6 +77,7 @@
                 commentDisplay:false,
                 commentsNumber:"",
                 likesNumber:"",
+                likeCheck:false,
                 deleteId:"",
                 deleteStatus:"on",
                 errorInfo:""
@@ -112,6 +119,7 @@
             toUserPage(){
                 console.log(this.tweet.userId)
                 this.$store.commit("DispalyUserIDget", this.tweet.userId)
+                cookies.set("userpageId", this.tweet.userId )
                 this.$router.push("/user")
             },
             toOneTweetPage(){
@@ -143,7 +151,6 @@
                 })
             },
             getComments() {
-                console.log(this.tweet.tweetId)
                 axios.request({
                     url: "https://tweeterest.ml/api/comments",
                     method: "get",
@@ -158,9 +165,7 @@
                     console.log(response.data)
                     this.commentsNumber = response.data.length
                     this.comments = response.data
-                    // console.log(this.comments)
                 }).catch((error) => {
-                    console.log("1212")
                     console.log(error)
                 })
             },
@@ -179,6 +184,35 @@
                 }).then((response) => {
                     console.log(response.data)
                     this.likesNumber = response.data.length
+                    for(let i = 0; i < response.data.length; i++){
+                        console.log(response.data[0].userId)
+                        if( response.data[i].userId == this.user.userId ){
+                           this.likeCheck = true
+                        }
+                    }
+                    console.log(this.likeCheck)
+                }).catch((error) => {
+                    // console.log("1212")
+                    console.log(error)
+                })
+            },
+            like() {
+                console.log("like")
+                console.log(this.tweet.tweetId)
+                axios.request({
+                    url: "https://tweeterest.ml/api/tweet-likes",
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    data:{
+                        "loginToken": this.token,
+                        "tweetId":this.tweet.tweetId
+                  }
+                }).then((response) => {
+                    console.log(response.data)
+                    this.getLike()
                     // this.comments = response.data
                     // console.log(this.comments)
                 }).catch((error) => {
@@ -189,7 +223,7 @@
         },
         computed: {
             user() {
-                return this.$store.state.userinfo
+                return cookies.get("logininfo")
             },
             tweetAllByDate(){
                 return this.$store.getters.tweetAllByDate
@@ -200,7 +234,7 @@
         },
         mounted () {
             this.getComments();
-            this. getLike()
+            this.getLike()
         },
         
     }

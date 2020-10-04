@@ -1,7 +1,7 @@
 <template>
     <div id="top-bar">
     <img @click="infoDisplay" id="userImg" src="../assets/user.png" alt="">
-    <img  id="refresh" src="../assets/logo.png" alt="">
+    <img  id="refresh" src="../assets/logo.png" alt="" @click="refresh">
     </div>
 </template>
 
@@ -17,6 +17,9 @@
         methods: {
             infoDisplay() {
                 this.$store.commit("infoShow")
+            },
+            refresh(){
+                this.$store.dispatch("alltweetGet")
             }
         },
     }
