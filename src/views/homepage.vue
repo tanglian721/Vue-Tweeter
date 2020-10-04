@@ -63,7 +63,6 @@ import axios from "axios"
                 this.$store.commit("infoHide")
             },
             getFollows() {
-                console.log(cookies.get("logininfo"))
                 axios.request({
                     url: "https://tweeterest.ml/api/follows",
                     method: "get",
@@ -96,10 +95,15 @@ import axios from "axios"
                     console.log(error);
                 })
             },
+            defaultSet() {
+                this.$store.commit("infoHide");
+                this.$store.commit("createHide");
+            }
         },
         mounted () {
             this.loginCheck();
-            this.getFollows()
+            this.getFollows();
+            this.defaultSet();
         },
     }
 </script>

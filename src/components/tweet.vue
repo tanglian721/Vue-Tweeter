@@ -46,7 +46,9 @@
                      <span @click="deleteTweet" >DELETE AGAIN</span>   
                     </div>
                 </div>
-                <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet>
+                 <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
+                    <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet>
+                </transition>
                 <div v-if="commentDisplay" id="comment-area">
                     <div id="comment-splitter"></div>
                      <tweet-comment  v-for="comment in comments" :key="comment.commentID" :comment=comment></tweet-comment>
@@ -106,18 +108,15 @@
             },
             editHide(childData){
                 this.editDisplay = childData
-                console.log(this.editArea)
             },
             deleteShow(){
                 this.deleteDisplay = true
                 this.deleteId = this.tweet.tweetId
-                console.log(this.deleteId)
             },
             backHome(){
                 this.deleteDisplay = false
             },
             toUserPage(){
-                console.log(this.tweet.userId)
                 this.$store.commit("DispalyUserIDget", this.tweet.userId)
                 cookies.set("userpageId", this.tweet.userId )
                 this.$router.push("/user")
@@ -125,7 +124,6 @@
             toOneTweetPage(){
                 this.$store.commit("tweetIdget", this.tweet.tweetId)
                 cookies.set("singleTweet", this.tweet)
-                console.log(this.tweet.tweetId)
                 this.$router.push("/tweet")
             },
             deleteTweet() {
@@ -145,7 +143,6 @@
                     this.deleteStatus = true,
                     this.$store.dispatch("alltweetGet")
                 }).catch((errorMessage) => {
-                    console.log(errorMessage)
                      this.deleteStatus = false 
                     this.errorInfo = errorMessage
                 })
@@ -162,7 +159,6 @@
                         "tweetId":this.tweet.tweetId
                   }
                 }).then((response) => {
-                    console.log(response.data)
                     this.commentsNumber = response.data.length
                     this.comments = response.data
                 }).catch((error) => {
@@ -170,7 +166,6 @@
                 })
             },
             getLike() {
-                console.log(this.tweet.tweetId)
                 axios.request({
                     url: "https://tweeterest.ml/api/tweet-likes",
                     method: "get",
@@ -182,23 +177,17 @@
                         "tweetId":this.tweet.tweetId
                   }
                 }).then((response) => {
-                    console.log(response.data)
                     this.likesNumber = response.data.length
                     for(let i = 0; i < response.data.length; i++){
-                        console.log(response.data[0].userId)
                         if( response.data[i].userId == this.user.userId ){
                            this.likeCheck = true
                         }
                     }
-                    console.log(this.likeCheck)
                 }).catch((error) => {
-                    // console.log("1212")
                     console.log(error)
                 })
             },
             like() {
-                console.log("like")
-                console.log(this.tweet.tweetId)
                 axios.request({
                     url: "https://tweeterest.ml/api/tweet-likes",
                     method: "post",
@@ -213,8 +202,6 @@
                 }).then((response) => {
                     console.log(response.data)
                     this.getLike()
-                    // this.comments = response.data
-                    // console.log(this.comments)
                 }).catch((error) => {
                     console.log("1212")
                     console.log(error)
@@ -241,6 +228,7 @@
 </script>
 
 <style lang="scss" scoped>
+@import url(https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css);
 #tweet-content{
     margin-top: 2vh;
     display: grid;

@@ -1,7 +1,12 @@
 <template>
-        <div class="follows" @click="toUserPage">
-        <img src="../assets/user (3).png" alt=""><span> {{ followArray.username }} </span>
-        <div v-if="followBtn">
+  <div class="follows" @click="toUserPage">
+    <img src="../assets/user (3).png" alt="" />
+    <div class="info">
+       <h3>{{ followArray.username }}</h3>
+       <p>{{ followArray.email }}</p>
+       <p>{{ followArray.bio }}</p>
+    </div> 
+        <div v-if="followbtnDisplay">
             <span class="follow" v-if="unfollow" @click="followUser">follow</span>
             <span class="follow" id="followingBtn" v-else @click="unfollowUser">following</span>
         </div>
@@ -16,6 +21,7 @@ import cookies from "vue-cookies"
         data() {
             return {
                 unfollow:true,
+                followbtnDisplay:true,
             }
         },
         props:{
@@ -25,16 +31,25 @@ import cookies from "vue-cookies"
             }
         },
         methods: {
-            toUserPage(){
-                console.log(this.followerArray.id)
-                
-                
+            toUserPage() {
+                console.log(this.followerArray.id);               
             },
-        },
-        followBtn(){
-                return this.userDisplayId != this.userinfo.userId
-        },
-        followUser() {
+            followBtbCheck(){
+                console.log(this.userDisplayId);
+                console.log(this.userinfo.userId);
+                if(this.userDisplayId != this.userinfo.userId){
+                this.followbtnDisplay = false;
+                };
+            },
+            checkFollowed() {
+                for(let i = 0; i < this.userFollow.length; i++){
+                 if(this.userFollow[i].userId == this.followArray.userId){
+                    this.unfollow = false;
+                };
+                };
+                console.log(this.unfollow);
+            },
+            followUser() {
                 console.log(this.userDisplayId)
                 axios.request({
                     url: "https://tweeterest.ml/api/follows",
@@ -76,17 +91,25 @@ import cookies from "vue-cookies"
                     console.log(error)
                 })
             },
-            computed: {
-                userinfo() {
-                return cookies.get("logininfo")
-            },
-            token() {
-                return cookies.get("loginToken")
-            },
-            userDisplayId(){
-                return cookies.get("userpageId")
-            }
-            },
+        },
+        computed: {
+          userinfo() {
+            return cookies.get("logininfo")
+          },
+          token() {
+            return cookies.get("loginToken")
+          },
+          userDisplayId(){
+            return cookies.get("userpageId")
+          },
+          userFollow() {
+            return this.$store.state.following;
+          }
+        },
+        mounted () {
+            this.followBtbCheck()
+            this.checkFollowed();
+        },
       
     }
 </script>
@@ -99,13 +122,28 @@ import cookies from "vue-cookies"
     margin-top: 2vh;
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 8fr;
+    grid-template-columns: 1fr 6fr 1fr;
     img{
         height: 6vh;
     };
-    span{
-        margin-left: 4vw;
-        font-size: 1.2rem;
+    h3{
+        font-size: 1rem;
     }
+    .info{
+        margin-left: 4vw;
+      p{
+        font-size: 0.8rem;
+      }
+    }
+}
+.follow{
+
+         border: 1px solid;
+         border-radius: 1rem;
+         padding: 5px;
+        }
+#followingBtn{
+    background-color:white ;
+    color:#B2F7EF ;
 }
 </style>

@@ -1,6 +1,11 @@
 <template>
-    <div class="followers" @click="toUserPage">
-        <img src="../assets/user (3).png" alt=""><span> {{ followerArray.username }} </span>
+    <div class="followers">
+      <img src="../assets/user (3).png" alt="">
+       <div class="info">
+         <h3>{{ followerArray.username }}</h3>
+          <p>{{ followerArray.email }}</p>
+          <p>{{ followerArray.bio }}</p>
+       </div>
     </div>
 </template>
 
@@ -8,11 +13,11 @@
     export default {
         name: "followers-area",
         props:{
-               followerArray:{
+            followerArray:{
+                
                 type:Object,
                 required:true
-            },
-            
+            }    
         },
     
     }
@@ -26,14 +31,20 @@
     margin-top: 2vh;
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 8fr;
+    grid-template-columns: 1fr 6fr 1fr;
     img{
         height: 6vh;
     };
-    span{
-        margin-left: 4vw;
-        font-size: 1.2rem;
+    h3{
+        font-size: 1rem;
     }
+    .info{
+        margin-left: 4vw;
+      p{
+        font-size: 0.8rem;
+      }
+    }  font-size: 1.2rem;
+    
 }
 
 </style>

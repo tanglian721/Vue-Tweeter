@@ -1,20 +1,20 @@
 <template>
-    <div id="create-tweet">
-        <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
-        <div v-if="submit === 'on'" id="text-area">
-        <img id="userImg" src="../assets/user (2).png">
-        <textarea name="" id="new-tweet" cols="30" rows="10" v-model="textContent" ></textarea>
-        </div>
-        <div class="message" v-else-if="submit === true">
-            <h2 >Tweet Created Sucessful!</h2>
-            <span @click="backHome" >Back</span>   
-        </div>
-        <div class="message" v-else-if="submit === false">
-            <h2 >Error Message: {{submit}}   </h2>
-            <span @click="reCreate" >Write Again</span>   
-        </div>
-        <button id="submit" @click="createTweet">tweet</button>
+  <div id="create-tweet">
+  <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
+    <div v-if="submit === 'on'" id="text-area">
+      <img id="userImg" src="../assets/user (2).png">
+      <textarea name="" id="new-tweet" cols="30" rows="10" v-model="textContent" ></textarea>
     </div>
+    <div class="message" v-else-if="submit === true">
+      <h2 >Tweet Created Sucessful!</h2>
+      <span @click="backHome" >Back</span>   
+    </div>
+    <div class="message" v-else-if="submit === false">
+      <h2 >Error Message: {{submit}}   </h2>
+      <span @click="reCreate" >Write Again</span>   
+    </div>
+    <button id="submit" @click="createTweet">tweet</button>
+  </div>
 </template>
 
 <script>
@@ -47,12 +47,13 @@
                     "content": this.textContent
                   }
                 }).then((response)=>{
-                    console.log(response)
-                    this.submit = true
+                    console.log(response);
+                    this.submit = true;
+                    this.$store.dispatch("alltweetGet");
                 }).catch((errorMessage)=>{
-                    this.submit = false,
-                    console.log(errorMessage)
-                    this.errorInfo = errorMessage
+                    this.submit = false;
+                    console.log(errorMessage);
+                    this.errorInfo = errorMessage;
                 })
             },
             reCreate(){

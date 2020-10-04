@@ -72,8 +72,8 @@
             }
         },
         mounted () {
-            // this.getLike();
-            this.test()
+            this.getLike();
+            // this.test()
         },
         computed: {
              user() {

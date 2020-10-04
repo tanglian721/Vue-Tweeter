@@ -6,7 +6,7 @@
       </div>
     </div>
     <img id="userImg" src="../assets/user.png" alt="" @click="getFollowers" />
-    <div v-if="followBtn">
+    <div v-if="followBtnDispaly">
       <span class="follow" v-if="unfollow" @click="followUser">follow</span>
       <span class="follow" id="followingBtn" v-else @click="unfollowUser">
         following
@@ -83,6 +83,7 @@ export default {
                 email: "email",
                 birthday: "birthday",
                 bio: "bio",
+                followBtnDispaly:"true",
                 followsNumber: "",
                 follows: [],
                 followersNumber: "",
@@ -101,64 +102,65 @@ export default {
                 require: true
             }
         },
-        methods: {
-             backHome() {
-                this.$router.push("/");
-                location.reload();
-            },
-            checkFollowed() {
-                console.log(this.userDisplayId);
-                for(let i = 0; i < this.userFollow.length; i++){
-                 if(this.userFollow[i].userId == this.userDisplayId){
-                    this.unfollow = false;
-                 };
-                };
-                console.log(this.unfollow);
-            },
-            followBtn() {
-                return this.userDisplayId != this.userinfo.userId;
-            },
-            tweetShow() {
-                this.bottomDisplay = "tweet";
-                document.getElementById("tweetbtn").style.backgroundColor = "#B2F7EF";
-                document.getElementById("followingbtn").style.backgroundColor = "white";
-                document.getElementById("followersbtn").style.backgroundColor = "white";
-            },
-            followingShow() {
-                this.bottomDisplay = "following";
-                document.getElementById("tweetbtn").style.backgroundColor = "white";
-                document.getElementById("followingbtn").style.backgroundColor = "#B2F7EF";
-                document.getElementById("followersbtn").style.backgroundColor = "white";
-            },
-            followersShow() {
-                this.bottomDisplay = "followers";
-                document.getElementById("tweetbtn").style.backgroundColor = "white";
-                document.getElementById("followingbtn").style.backgroundColor = "white";
-                document.getElementById("followersbtn").style.backgroundColor = "#B2F7EF";
-            },
-            getUser() {
-                axios.request({
-                    url: "https://tweeterest.ml/api/users",
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-                    },
-                    params:{
-                        userId:this.userDisplayId
-                    }
-                }).then((response) => {
-                    console.log(response.data);
-                     this.user = response.data[0].username;
-                     this.email = response.data[0].email;
-                     this.birthday = response.data[0].birthdate;
-                     this.bio = response.data[0].bio;
-                }).catch((error) => {
-                    console.log(error);
-                })
-            },
-            getFollows() {
-                axios.request({
+    methods: {
+        backHome() {
+          this.$router.push("/");
+          location.reload();
+        },
+        checkFollowed() {
+            for(let i = 0; i < this.userFollow.length; i++){
+             if(this.userFollow[i].userId == this.userDisplayId){
+                this.unfollow = false;
+             };
+            };
+            console.log(this.unfollow);
+        },
+        followBtn() {
+            if(this.userDisplayId == this.userinfo.userId) {
+                this.followBtnDispaly = false;
+            };
+        },
+        tweetShow() {
+            this.bottomDisplay = "tweet";
+            document.getElementById("tweetbtn").style.backgroundColor = "#B2F7EF";
+            document.getElementById("followingbtn").style.backgroundColor = "white";
+            document.getElementById("followersbtn").style.backgroundColor = "white";
+        },
+        followingShow() {
+            this.bottomDisplay = "following";
+            document.getElementById("tweetbtn").style.backgroundColor = "white";
+            document.getElementById("followingbtn").style.backgroundColor = "#B2F7EF";
+            document.getElementById("followersbtn").style.backgroundColor = "white";
+        },
+        followersShow() {
+             this.bottomDisplay = "followers";
+             document.getElementById("tweetbtn").style.backgroundColor = "white";
+             document.getElementById("followingbtn").style.backgroundColor = "white";
+             document.getElementById("followersbtn").style.backgroundColor = "#B2F7EF";
+         },
+        getUser() {
+             axios.request({
+                 url: "https://tweeterest.ml/api/users",
+                 method: "get",
+                 headers: {
+                     "Content-Type": "application/json",
+                     "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                 },
+                 params:{
+                     userId:this.userDisplayId
+                 }
+             }).then((response) => {
+                 console.log(response.data);
+                  this.user = response.data[0].username;
+                  this.email = response.data[0].email;
+                  this.birthday = response.data[0].birthdate;
+                  this.bio = response.data[0].bio;
+             }).catch((error) => {
+                 console.log(error);
+             })
+         },
+        getFollows() {
+             axios.request({
                     url: "https://tweeterest.ml/api/follows",
                     method: "get",
                     headers: {
@@ -175,7 +177,7 @@ export default {
                     console.log(error)
                 })
             },
-            getFollowers() {
+        getFollowers() {
                 axios.request({
                     url: "https://tweeterest.ml/api/followers",
                     method: "get",
@@ -193,8 +195,8 @@ export default {
                     console.log(error);
                 })
             },
-            followUser() {
-                axios.request({
+        followUser() {
+          axios.request({
                     url: "https://tweeterest.ml/api/follows",
                     method: "post",
                     headers: {
@@ -213,7 +215,7 @@ export default {
                     console.log(error)
                 })
             },
-            unfollowUser() {// password?
+        unfollowUser() {// password?
                 console.log(this.userDisplayId)
                 axios.request({
                     url: "https://tweeterest.ml/api/follows",
@@ -233,10 +235,8 @@ export default {
                     console.log(error);
                 })
             },
-
-
-        },
-        computed: {
+    },
+    computed: {
             userinfo() {
                 return cookies.get("logininfo");
             },
@@ -246,15 +246,16 @@ export default {
             userFollow() {
                 return this.$store.state.following;
             }
-        },
-        mounted () {
+    },
+    mounted () {
             this.getFollowers();
             this.getUser();
             this.getFollows();         
             this.checkFollowed();
+            this.followBtn();
      
-        }
     }
+}
 </script>
 
 <style lang="scss" scoped>
