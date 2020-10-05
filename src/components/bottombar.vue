@@ -1,7 +1,7 @@
 <template>
     <div id="bottom-bar">
         <img src="../assets/home.png" alt="" @click="home">
-        <img src="../assets/loupe.png" alt="">
+        <img src="../assets/loupe.png" alt="" @click="userFollow">
         <img src="../assets/email.png" alt="">
         <img id="createBtn" src="../assets/createBtn.png" @click="createNew">
     </div>
@@ -16,6 +16,9 @@
             },
             home(){
                 this.$router.push("/")
+            },
+            userFollow() {
+                this.$router.push("/userfollow")
             }
         },
     }

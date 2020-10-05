@@ -8,8 +8,9 @@
                 <div v-if="info" id="infor-background" @click="infoDisplay"></div>
             </transition>
             <top-bar></top-bar>
+               <button @click="alltweetGet">get</button> 
             <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
-                <create-tweet v-if="createNew"></create-tweet>
+            <create-tweet v-if="createNew"></create-tweet>
             </transition>
             <page-content></page-content>
             <bottom-bar></bottom-bar>
@@ -39,7 +40,7 @@ import axios from "axios"
         },
         data() {
             return {
-                loginStatus: false
+                loginStatus: false,
             }
         },
         computed: {
@@ -59,6 +60,70 @@ import axios from "axios"
                 this.$router.push("/signin")
                 }
             },
+            getComments(tweet) {
+                axios.request({
+                    url: "https://tweeterest.ml/api/comments",
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    params:{
+                        "tweetId":tweet.tweetId
+                  }
+                }).then((response) => {
+                  tweet.commentstAmount = response.data.length;
+                  this.$store.commit("pushAllTweet", tweet)
+                }).catch((error) => {
+                    console.log(error)
+                })
+            },
+            getLike(tweet) {
+                axios.request({
+                    url: "https://tweeterest.ml/api/tweet-likes",
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    params:{
+                        "tweetId":tweet.tweetId
+                  }
+                }).then((response) => {
+                    tweet.likeAmount = response.data.length;
+                            this.getComments(tweet)
+                    // }
+                    // for(let i = 0; i < response.data.length; i++){
+                    //     if( response.data[i].userId == this.user.userId ){
+                    //        this.likeCheck = true
+                    //     }
+                    // }
+                }).catch((error) => {
+                    console.log(error)
+                })
+            },
+            forEachTweet(tweetsArray) {
+                console.log(tweetsArray);
+                for(let i = 0; i < tweetsArray.length; i++){
+                    this.getLike(tweetsArray[i]);
+                }
+            },
+            alltweetGet() {
+               axios.request({
+                  url: "https://tweeterest.ml/api/tweets",
+                  method: "get",
+                   headers: {
+                    "Content-Type": "application/json",
+                    "X-Api-Key":"57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                }
+            }).then((response) => {
+                console.log(response.data);
+                this.forEachTweet(response.data);
+            }).catch((error) => {
+                console.log(error)
+            })
+           },
+            
             infoDisplay() {
                 this.$store.commit("infoHide")
             },
@@ -73,8 +138,9 @@ import axios from "axios"
                         userId:cookies.get("logininfo").userId
                     }
                 }).then((response) => {
-                    this.$store.commit("userFollowing", response.data);
-                }).catch((error) => {
+                    this.$store.commit("userFollowing", response.data)
+                }
+                ).catch((error) => {
                     console.log(error);
                 })
             },
@@ -103,7 +169,7 @@ import axios from "axios"
         mounted () {
             this.loginCheck();
             this.getFollows();
-            this.defaultSet();
+            // this.defaultSet();
         },
     }
 </script>

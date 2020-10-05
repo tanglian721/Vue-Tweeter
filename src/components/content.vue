@@ -35,7 +35,7 @@
             }
         },
         mounted () {
-            this.alltweetGet()
+            // this.alltweetGet()
         },
     }
 </script>

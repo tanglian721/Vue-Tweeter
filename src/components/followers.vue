@@ -14,7 +14,7 @@
         name: "followers-area",
         props:{
             followerArray:{
-                
+
                 type:Object,
                 required:true
             }    

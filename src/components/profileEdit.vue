@@ -47,8 +47,7 @@ import signUpApi from "axios"
                 edit: false
             }
         },
-        methods: {
-            
+        methods: {           
             loading(){
                 this.user = this.userinfo.username,
                 this.email = this.userinfo.email,
@@ -74,9 +73,8 @@ import signUpApi from "axios"
                     "bio":this.bio
                   }
                 }).then((response)=>{
-                    console.log(response)
+                    console.log(response.data)
                     cookies.set("logininfo",response.data)
-                    this.$store.commit("userinfo")
                     this.edit = false
                 }).catch((error)=>{
                     console.log(error)

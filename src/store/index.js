@@ -12,6 +12,8 @@ export default new Vuex.Store({
         createArea: false,
         oneUserTweet: [],
         homePageTweets: [],
+        allTweets: [],
+        followTweets: [],
         // DisplayUserID: "",
         tweetId: "",
         singleTweet: "",
@@ -51,6 +53,14 @@ export default new Vuex.Store({
         },
         getOneUserTweets: function(state, data) {
             state.oneUserTweet = data;
+        },
+        pushAllTweet(state, tweet) {
+            state.allTweets.push(tweet);
+            console.log(state.allTweets)
+        },
+        pushFollowTweet(state, tweet) {
+            state.followTweets.push(tweet);
+            console.log(state.followTweets)
         }
     },
     actions: {
@@ -70,8 +80,6 @@ export default new Vuex.Store({
             })
         },
         SingleTweetGet(context) {
-            console.log("hello")
-            console.log(this.state.DisplayUserID)
             axios.request({
                 url: "https://tweeterest.ml/api/tweets",
                 method: "get",
@@ -86,7 +94,6 @@ export default new Vuex.Store({
                 console.log(response)
                 context.commit("getOneUserTweets", response.data)
             }).catch((error) => {
-                console.log("1212")
                 console.log(error)
             })
         }
@@ -99,14 +106,57 @@ export default new Vuex.Store({
                 let tweetA = a.created_at;
                 let tweetB = b.created_at;
                 let comparision = 0;
-                if (tweetA > tweetB) {
+                if (tweetA < tweetB) {
                     comparision = 1;
-                } else if (tweetA < tweetB) {
+                } else if (tweetA > tweetB) {
                     comparision = -1;
                 }
                 return comparision
             }
-            return state.homePageTweets.sort(compare);
-        }
+            return state.allTweets.sort(compare);
+        },
+        tweetAllByLike: function(state) {
+            function compare(a, b) {
+                let tweetA = a.likeAmount;
+                let tweetB = b.likeAmount;
+                let comparision = 0;
+                if (tweetA < tweetB) {
+                    comparision = 1;
+                } else if (tweetA > tweetB) {
+                    comparision = -1;
+                }
+                return comparision
+            }
+            return state.allTweets.sort(compare);
+        },
+        tweetAllByComments: function(state) {
+            function compare(a, b) {
+                let tweetA = a.commentstAmount;
+                let tweetB = b.commentstAmount;
+                let comparision = 0;
+                if (tweetA < tweetB) {
+                    comparision = 1;
+                } else if (tweetA > tweetB) {
+                    comparision = -1;
+                }
+                return comparision
+            }
+            return state.allTweets.sort(compare);
+        },
+        userFollowTweetByDate: function(state) {
+            function compare(a, b) {
+                let tweetA = a.created_at;
+                let tweetB = b.created_at;
+                let comparision = 0;
+                if (tweetA < tweetB) {
+                    comparision = 1;
+                } else if (tweetA > tweetB) {
+                    comparision = -1;
+                }
+                return comparision
+            }
+            return state.followTweets.sort(compare);
+        },
+
     }
 });

@@ -5,6 +5,7 @@ import SigninPage from "../views/SigninPage.vue"
 import ProfilePage from "../views/profilepage.vue"
 import UserPage from "../views/userpage.vue"
 import OnetweetPage from "../views/oneTweetpage.vue"
+import UserFollowpage from "../views/userfollowpage.vue"
 
 Vue.use(VueRouter);
 
@@ -32,6 +33,11 @@ const routes = [{
         path: "/tweet",
         name: "onetweet-page",
         component: OnetweetPage
+    },
+    {
+        path: "/userfollow",
+        name: "user-followpage",
+        component: UserFollowpage
     },
 
 
