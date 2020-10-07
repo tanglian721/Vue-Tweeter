@@ -1,8 +1,14 @@
 <template>
     <div id="one-tweet-page">
+    <transition name="info">
+         <info-page v-if="info" ></info-page>
+     </transition>
+    <transition name="infoBg">
+        <div v-if="info" id="infor-background" @click="infoDisplay"></div>
+     </transition>
       <top-bar></top-bar>
       <div id="tweetArea">
-          <img src="../assets/user (2).png" alt="" id="userImg">
+          <img class="img" :src= Imgpath alt="" id="userImg">
           <div id="text-area">
                 <div id="name-date">
                     <h3 id="name" @click="toUserPage">{{ tweet.username }}</h3> 
@@ -16,7 +22,7 @@
                     </h5>
                     <h5 id="like">
                         <img src="../assets/heart-red.png" alt="" v-if="likesNumber > 0" @click="getLike">
-                        <img src="../assets/heart.png" alt="" v-else @click="getLike">
+                        <img src="../assets/heart.png" alt="" v-else @click="like">
                         <span id="like-active">{{ likesNumber }}</span>
                     </h5>
                     <h5>
@@ -52,7 +58,7 @@
                             <button id="create" @click="createComment">submit</button>
                         </div>
                         <div class="submit" v-else-if="submit == true">
-                             <h2 >Tweet Created Sucessful!</h2>
+                             <h2 >Comment Created Sucessful!</h2>
                         </div>
                         <div class="submit" v-else-if="submit == false">
                             <h2 >{{submit}} </h2>
@@ -62,6 +68,9 @@
                 </div>
           </div>
       </div>
+       <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
+      <create-tweet v-if="createNew"></create-tweet>
+      </transition>
       <bottom-bar></bottom-bar>
     </div>
 </template>
@@ -71,6 +80,8 @@ import TopBar from "../components/topbar.vue"
 import BottomBar from "../components/bottombar.vue"
 import TweetComment from "../components/comment.vue"
 import EditTweet from "../components/editTweet.vue"
+import InfoPage from "../components/infopage.vue"
+import CreateTweet from "../components/createTweet.vue"
 import axios from "axios"
 import cookies from "vue-cookies"
     export default {
@@ -79,7 +90,9 @@ import cookies from "vue-cookies"
             TopBar,
             BottomBar,
             TweetComment,
-            EditTweet
+            EditTweet,
+            InfoPage,
+            CreateTweet
         },
         data() {
             return {
@@ -93,7 +106,8 @@ import cookies from "vue-cookies"
                 deleteStatus:"on",
                 errorInfo:"",
                 submit:"on",
-                commentContent:"What is your comment"
+                commentContent:"What is your comment",
+                Imgpath:""
             }
         },
         props:{
@@ -103,11 +117,12 @@ import cookies from "vue-cookies"
             }
         },
         methods: {
-            test(){
-                console.log(this.tweetAllByDate)
-            },
             getOneTweet(){
                 this.tweet = cookies.get("singleTweet")
+                this.Imgpath = cookies.get(this.tweet.username)
+            },
+            infoDisplay() {
+                this.$store.commit("infoHide")
             },
             edit() {
                 this.editDisplay = true
@@ -217,10 +232,52 @@ import cookies from "vue-cookies"
                         "tweetId":this.tweetId
                   }
                 }).then((response) => {
-                    console.log(response.data)
+                    console.log(response)
                     this.likesNumber = response.data.length
                     // this.comments = response.data
                     // console.log(this.comments)
+                }).catch((error) => {
+                    console.log("1212")
+                    console.log(error)
+                })
+            },           
+            like() {
+                console.log("like")
+                axios.request({
+                    url: "https://tweeterest.ml/api/tweet-likes",
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    data:{
+                        "loginToken": this.token,
+                        "tweetId":this.tweet.tweetId
+                  }
+                }).then((response) => {
+                    console.log(response.data)
+                    this.getLike();
+                }).catch((error) => {
+                    console.log("1212")
+                    console.log(error)
+                })
+            },
+            unlike() {
+                console.log("like")
+                axios.request({
+                    url: "https://tweeterest.ml/api/tweet-likes",
+                    method: "delete",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    data:{
+                        "loginToken": this.token,
+                        "tweetId":this.tweet.tweetId
+                  }
+                }).then((response) => {
+                    console.log(response.data)
+                    this.getLike()
                 }).catch((error) => {
                     console.log("1212")
                     console.log(error)
@@ -231,14 +288,17 @@ import cookies from "vue-cookies"
             user() {
                 return cookies.get("logininfo")
             },
-            tweetAllByDate(){
-                return this.$store.getters.tweetAllByDate
-            },
             token() {
                 return cookies.get("loginToken")
             },
             tweetId(){
                 return this.$store.state.tweetId
+            },
+             info(){
+                return this.$store.state.infoForm
+            },
+            createNew(){
+                return this.$store.state.createArea
             }
         },
         mounted () {
@@ -253,6 +313,44 @@ import cookies from "vue-cookies"
 <style lang="scss" scoped>
     #one-tweet-page{
         min-height: 100vh;
+        #info-page{
+    position: relative;
+    z-index: 99;
+     width: 60vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    }
+    #create-tweet{
+        width: 80%;
+        min-height: 30vh;
+        border-radius: 30px;
+        background-color: white;
+        position: fixed;
+        top: 30vh;
+        left: 10%;
+        filter: drop-shadow(2px 2px 5px gray);
+    }
+    .info-enter, .info-leave-to{
+    transform: translateX(-100%);
+    }
+    .info-enter-active, .info-leave-active{
+    transition: transform 0.5s linear
+    }
+    .infoBg-enter, .infoBg-leave-to{
+    opacity: 0;
+    }
+    .infoBg-enter-active, .infoBg-leave-active{
+    transition: opacity 0.5s linear
+    }
+    #infor-background{
+    position: absolute;
+    z-index: 50;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    }
     }
     #top-bar{
         z-index: 20;
@@ -362,4 +460,7 @@ import cookies from "vue-cookies"
         height: 8vh;
         bottom: 0;
     }
+    .img{
+    border-radius: 50%;
+}
 </style>

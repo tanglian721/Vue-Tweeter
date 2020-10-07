@@ -1,6 +1,6 @@
 <template>
     <div id="profile-show">
-        <img id="userImg" src="../assets/user.png" alt="">
+        <img id="userImg" :src= Imgpath alt="">
         <span id="editBtn" @click="edit = !edit"> Edit Profile </span>
         <div id="userInfo">
             <p id="user">
@@ -27,24 +27,30 @@
                <span id="following">following : 2</span>
                <span id="follower"> follower :4</span>
             </p>
+            <portrait-set  v-if="edit" id="portrait-set"></portrait-set>
         </div>
         <span id="submit" v-if="edit" @click="signUpUser">Submit</span>
     </div>
 </template>
 
 <script>
+import PortraitSet from "../components/portraitSet"
 import cookies from "vue-cookies"
 import signUpApi from "axios"
 
     export default {
         name:"profile-edit",
+        components:{
+            PortraitSet
+        },
         data() {
             return {
                 user: "name",
                 email:"email",
                 birthday: "birthday",
                 bio: "bio",
-                edit: false
+                edit: false,
+                Imgpath:cookies.get(cookies.get("logininfo").username)
             }
         },
         methods: {           
@@ -104,6 +110,7 @@ import signUpApi from "axios"
             position: relative;
             top: -13vw;
             left: 5vw;
+            border-radius: 50%;
         }
         #editBtn{
             border: 1px solid black;
@@ -131,6 +138,10 @@ import signUpApi from "axios"
             margin-left:10vw;
             top: 4vh;
             filter: drop-shadow(2px 2px 5px gray);
+        }
+        #portrait-set{
+            width: 70vw;
+
         }
     }
 

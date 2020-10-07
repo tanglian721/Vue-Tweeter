@@ -1,21 +1,21 @@
 <template>
     <div>
         <div id="tweet-content">
-            <img src="../assets/user (2).png" alt="" id="userImg">
+            <img class="img" :src= Imgpath alt="" id="userImg">
             <div id="text-area">
                 <div id="name-date">
                     <h3 id="name" @click="toUserPage">{{ tweet.username }}</h3> 
-                    <h6 id="date">{{ tweet.created_at }}</h6>
+                    <h6 id="date">{{ tweet.createdAt }}</h6>
                 </div>
                 <p id="tweet-text" @click="toOneTweetPage">{{ tweet.content }}</p>
                 <div id="comment-like">
                     <h5 id="comment">
-                        <img src="../assets/speech.png" alt="" @click="commentDisplay = !commentDisplay">
+                        <img src="../assets/speech.png" alt="" @click="commentShow">
                         <span id="comment-number">{{ tweet.commentstAmount }}</span>
                     </h5>
                     <h5 id="like">
-                        <div v-if="likeCheck">
-                             <img  src="../assets/heart-red.png" alt="" @click="like">
+                        <div v-if=tweet.ifLike>
+                             <img  src="../assets/heart-red.png" alt="" @click="unlike">
                              <span id="like-active">{{ tweet.likeAmount }}</span>
                         </div>
                         <div v-else>
@@ -49,7 +49,7 @@
                  <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
                     <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet>
                 </transition>
-                <div v-if="commentDisplay" id="comment-area">
+                <div v-if="commentDisplay" id="comment-area" >
                     <div id="comment-splitter"></div>
                      <tweet-comment  v-for="comment in comments" :key="comment.commentID" :comment=comment></tweet-comment>
                 </div>
@@ -82,7 +82,8 @@
                 likeCheck:false,
                 deleteId:"",
                 deleteStatus:"on",
-                errorInfo:""
+                errorInfo:"",
+                Imgpath:cookies.get(this.tweet.username)
             }
         },
         props:{
@@ -100,9 +101,6 @@
             }
         },
         methods: {
-            // test(){
-            //     console.log(this.tweetAllByDate)
-            // },
             edit() {
                 this.editDisplay = true
             },
@@ -147,47 +145,34 @@
                     this.errorInfo = errorMessage
                 })
             },
-            // getComments() {
-            //     axios.request({
-            //         url: "https://tweeterest.ml/api/comments",
-            //         method: "get",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //             "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-            //         },
-            //         params:{
-            //             "tweetId":this.tweet.tweetId
-            //       }
-            //     }).then((response) => {
-            //         this.commentsNumber = response.data.length
-            //         this.comments = response.data
-            //     }).catch((error) => {
-            //         console.log(error)
-            //     })
-            // },
-            // getLike() {
-            //     axios.request({
-            //         url: "https://tweeterest.ml/api/tweet-likes",
-            //         method: "get",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //             "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-            //         },
-            //         params:{
-            //             "tweetId":this.tweet.tweetId
-            //       }
-            //     }).then((response) => {
-            //         this.likesNumber = response.data.length
-            //         for(let i = 0; i < response.data.length; i++){
-            //             if( response.data[i].userId == this.user.userId ){
-            //                this.likeCheck = true
-            //             }
-            //         }
-            //     }).catch((error) => {
-            //         console.log(error)
-            //     })
-            // },
+            commentShow() {
+                this.commentDisplay = !this.commentDisplay;
+                this.getComments();
+            },
+            getComments() {
+                console.log(this.tweet.tweetId)
+                axios.request({
+                    url: "https://tweeterest.ml/api/comments",
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    params:{
+                        "tweetId":this.tweet.tweetId
+                  }
+                }).then((response) => {
+                    console.log(response.data)
+                    this.commentsNumber = response.data.length
+                    this.comments = response.data
+                    // console.log(this.comments)
+                }).catch((error) => {
+                    console.log("1212")
+                    console.log(error)
+                })
+            },
             like() {
+                console.log("like")
                 axios.request({
                     url: "https://tweeterest.ml/api/tweet-likes",
                     method: "post",
@@ -201,7 +186,30 @@
                   }
                 }).then((response) => {
                     console.log(response.data)
-                    this.getLike()
+                    this.tweet.ifLike = true;
+                    this.tweet.likeAmount++;
+                }).catch((error) => {
+                    console.log("1212")
+                    console.log(error)
+                })
+            },
+            unlike() {
+                console.log("like")
+                axios.request({
+                    url: "https://tweeterest.ml/api/tweet-likes",
+                    method: "delete",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                    },
+                    data:{
+                        "loginToken": this.token,
+                        "tweetId":this.tweet.tweetId
+                  }
+                }).then((response) => {
+                    console.log(response.data)
+                     this.tweet.ifLike = false;
+                    this.tweet.likeAmount--;
                 }).catch((error) => {
                     console.log("1212")
                     console.log(error)
@@ -212,9 +220,7 @@
             user() {
                 return cookies.get("logininfo")
             },
-            // tweetAllByDate(){
-            //     return this.$store.getters.tweetAllByDate
-            // },
+          
             token() {
                 return cookies.get("loginToken")
             }
@@ -304,7 +310,11 @@
             background-color: #B2F7EF;
         }
    }
+   
 
+}
+.img{
+    border-radius: 50%;
 }
     // #splitter{
     //     margin-top: 2vh;

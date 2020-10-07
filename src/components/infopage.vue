@@ -1,6 +1,6 @@
 <template>
     <div id="info-page">
-        <img id="userImg" src="../assets/user.png" alt="">
+        <img id="userImg" :src= Imgpath alt="">
         <div id="userInfo" @click="userPage">
             <p id="user">{{ user }}</p>
             <p id="email">{{ email }}</p>
@@ -40,7 +40,8 @@ import cookies from "vue-cookies"
                 user: "name",
                 email:"email",
                 birthday: "birthday",
-                bio: "bio"
+                bio: "bio",
+                Imgpath:cookies.get(cookies.get("logininfo").username)
             }
         },
         methods: {
@@ -57,6 +58,8 @@ import cookies from "vue-cookies"
             logout() {
                 cookies.remove("logininfo");
                 cookies.remove("loginToken");
+                this.$store.commit("clearAllTweet")
+
                 this.$router.push("/signin");
             },
             userPage() {
@@ -145,5 +148,8 @@ button{
     right: 10vw;
     bottom: 2vh;
 }
+#userImg{
+        border-radius: 50%;
+    }
 
 </style>

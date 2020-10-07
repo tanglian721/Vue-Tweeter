@@ -1,8 +1,14 @@
 <template>
     <div id="bottom-bar">
-        <img src="../assets/home.png" alt="" @click="home">
-        <img src="../assets/loupe.png" alt="" @click="userFollow">
-        <img src="../assets/email.png" alt="">
+        <div>
+           <img v-if="this.icon == 'homepage'" src="../assets/home_A.png" alt="">
+           <img v-else src="../assets/home.png" alt="" @click="home">
+        </div>
+        <div>
+        <img v-if="this.icon == 'userfollow'" src="../assets/userlist_A.png" alt="" >
+        <img v-else src="../assets/userlist.png" alt="" @click="userFollow">
+        </div>
+        <img src="../assets/backBlack.png" alt="" @click="back">
         <img id="createBtn" src="../assets/createBtn.png" @click="createNew">
     </div>
 </template>
@@ -10,6 +16,11 @@
 <script>
     export default {
         name:"bottom-bar",
+        props: {
+            icon:{
+                type:String
+            }
+        },
         methods: {
             createNew() {
                 this.$store.commit("createShow")
@@ -19,13 +30,22 @@
             },
             userFollow() {
                 this.$router.push("/userfollow")
+            },
+            back() {
+                  window.history.back();
+            },
+            test() {
+                console.log(this.icon)
             }
+
         },
+
     }
 </script>
 
 <style lang="scss" scoped>
     #bottom-bar{
+        background-color: rgba(59, 59, 59, 0.6);
         position: relative;
         display: inline-flex;
         justify-content: space-evenly;

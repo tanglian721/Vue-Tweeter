@@ -1,12 +1,19 @@
 <template>
     <div id="userfollowcontent">
-          <single-tweet class="tweet" v-for="tweet in tweets" v-bind:key="tweet.tweetId" :tweet=tweet ></single-tweet>
+          <div v-if="iftopic">
+        <single-tweet class="tweet" v-for="tweet in tweetsByComments" v-bind:key="tweet.tweetId" :tweet=tweet ></single-tweet>
+        </div>
+        <div v-else>
+        <single-tweet class="tweet" v-for="tweet in tweets" v-bind:key="tweet.tweetId" :tweet=tweet ></single-tweet>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from "axios"
- import SingleTweet from "./tweet" 
+import cookies from "vue-cookies"
+
+import SingleTweet from "./tweet" 
 
     export default {
         name: "user-followtweets",
@@ -17,7 +24,10 @@ import axios from "axios"
             tweet:{
                type:Object,
                requried: true
-            }
+            },
+             iftopic:{ 
+                type:Boolean
+            },   
         },
         methods: {
             getComments(tweet) {
@@ -51,13 +61,13 @@ import axios from "axios"
                   }
                 }).then((response) => {
                     tweet.likeAmount = response.data.length;
-                            this.getComments(tweet)
-                    // }
-                    // for(let i = 0; i < response.data.length; i++){
-                    //     if( response.data[i].userId == this.user.userId ){
-                    //        this.likeCheck = true
-                    //     }
-                    // }
+                       for(let i = 0; i < response.data.length; i++){
+                       
+                        if( response.data[i].username == this.userinfo.username ){
+                           tweet.ifLike = true;
+                        }
+                    }
+                   this.getComments(tweet)
                 }).catch((error) => {
                     console.log(error)
                 })
@@ -87,6 +97,8 @@ import axios from "axios"
               })
             },
             getUserFollowTweets(){
+                this.$store.commit("clearFollowTweet")
+                console.log(this.followingArray)
                 for(let i = 0; i < this.followingArray.length; i++){
                     this.SingleTweetGet(this.followingArray[i])
                 }
@@ -98,7 +110,13 @@ import axios from "axios"
             },
             tweets() {
                 return this.$store.getters.userFollowTweetByDate 
-            }
+            },
+            tweetsByComments() {
+                return this.$store.getters.userFollowTweetAllByComments 
+            },
+            userinfo() {
+                return cookies.get("logininfo");
+            },
         },
         mounted () {
             this.getUserFollowTweets();
@@ -107,5 +125,16 @@ import axios from "axios"
 </script>
 
 <style lang="scss" scoped>
-
+#userfollowcontent{
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    overflow: hidden;
+}
+.tweet{
+    box-sizing: border-box;
+    width: 90%;
+    // background-color: white;
+    padding: 2vh;
+}
 </style>

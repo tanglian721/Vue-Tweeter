@@ -5,7 +5,7 @@
         <img src="../assets/back.png" alt="" />
       </div>
     </div>
-    <img id="userImg" src="../assets/user.png" alt="" @click="getFollowers" />
+    <img id="userImg" :src= Imgpath alt="" @click="getFollowers" />
     <div v-if="followBtnDispaly">
       <span class="follow" v-if="unfollow" @click="followUser">follow</span>
       <span class="follow" id="followingBtn" v-else @click="unfollowUser">
@@ -47,12 +47,12 @@
       <followers-area 
         v-else-if="bottomDisplay == 'followers'"  
         v-for="follower in followers" 
-        :key="follower.id" 
+        :key="follower.userId" 
         :followerArray="follower"></followers-area>
       <following-area 
         v-else-if="bottomDisplay == 'following'"  
         v-for="follow in follows" 
-        :key="follow.id" 
+        :key="follow.userId" 
         :followArray="follow" ></following-area>
             <!-- </transition> -->
     </div>
@@ -89,7 +89,8 @@ export default {
                 followersNumber: "",
                 followers: [],
                 bottomDisplay: "tweet",
-                unfollow: true
+                unfollow: true,
+                Imgpath:"",
             };
         },
     props: {
@@ -155,6 +156,7 @@ export default {
                   this.email = response.data[0].email;
                   this.birthday = response.data[0].birthdate;
                   this.bio = response.data[0].bio;
+                  this.Imgpath = cookies.get(this.user);
              }).catch((error) => {
                  console.log(error);
              })
@@ -288,6 +290,7 @@ export default {
             position: absolute;
             top: 13vh;
             left: 5vw;
+            border-radius: 50%;
     }
       #userInfo{
             position: relative;

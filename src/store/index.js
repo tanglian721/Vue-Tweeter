@@ -17,8 +17,30 @@ export default new Vuex.Store({
         // DisplayUserID: "",
         tweetId: "",
         singleTweet: "",
-        following: "",
-        follower: ""
+        following: [],
+        follower: [],
+        portrait: [{
+                id: 0,
+                path: "https://lh3.googleusercontent.com/proxy/9XZYVuKFypmvgMtHjyGgSxv_zZt8SIELb0nn--fBs5PujupfZRt7KkfdXATjENtj8YNxQNLwC4VJBRb8Q7VJq4MWtYQwnjk3EWaeK2MD544vf1o"
+            }, {
+                id: 1,
+                path: "https://pbs.twimg.com/profile_images/1278183948279922690/ybnDHXn7_400x400.jpg"
+            }, {
+                id: 2,
+                path: "https://pbs.twimg.com/profile_images/1277861176727257090/hVmaujAQ_400x400.jpg"
+            }, {
+                id: 3,
+                path: "https://pbs.twimg.com/profile_images/1309477596598431744/Jrcoh81s_400x400.png"
+            },
+            {
+                id: 4,
+                path: "https://pbs.twimg.com/profile_images/1313580069323898880/9cCQ0Ut6_400x400.jpg"
+            },
+            {
+                id: 5,
+                path: "https://s3.amazonaws.com/pix.iemoji.com/images/emoji/apple/ios-12/256/woman-cook-medium-skin-tone.png"
+            },
+        ]
     },
     mutations: {
         signUpDisplay: function(state) {
@@ -54,13 +76,17 @@ export default new Vuex.Store({
         getOneUserTweets: function(state, data) {
             state.oneUserTweet = data;
         },
+        clearAllTweet(state) {
+            state.allTweets = [];
+        },
+        clearFollowTweet(state) {
+            state.followTweets = [];
+        },
         pushAllTweet(state, tweet) {
             state.allTweets.push(tweet);
-            console.log(state.allTweets)
         },
         pushFollowTweet(state, tweet) {
             state.followTweets.push(tweet);
-            console.log(state.followTweets)
         }
     },
     actions: {
@@ -103,8 +129,8 @@ export default new Vuex.Store({
     getters: {
         tweetAllByDate: function(state) {
             function compare(a, b) {
-                let tweetA = a.created_at;
-                let tweetB = b.created_at;
+                let tweetA = a.createdAt;
+                let tweetB = b.createdAt;
                 let comparision = 0;
                 if (tweetA < tweetB) {
                     comparision = 1;
@@ -145,8 +171,8 @@ export default new Vuex.Store({
         },
         userFollowTweetByDate: function(state) {
             function compare(a, b) {
-                let tweetA = a.created_at;
-                let tweetB = b.created_at;
+                let tweetA = a.createdAt;
+                let tweetB = b.createdAt;
                 let comparision = 0;
                 if (tweetA < tweetB) {
                     comparision = 1;
@@ -157,6 +183,19 @@ export default new Vuex.Store({
             }
             return state.followTweets.sort(compare);
         },
-
+        userFollowTweetAllByComments: function(state) {
+            function compare(a, b) {
+                let tweetA = a.commentstAmount;
+                let tweetB = b.commentstAmount;
+                let comparision = 0;
+                if (tweetA < tweetB) {
+                    comparision = 1;
+                } else if (tweetA > tweetB) {
+                    comparision = -1;
+                }
+                return comparision
+            }
+            return state.followTweets.sort(compare);
+        },
     }
 });

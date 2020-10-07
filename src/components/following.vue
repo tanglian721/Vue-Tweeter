@@ -32,7 +32,7 @@ import cookies from "vue-cookies"
         },
         methods: {
             toUserPage() {
-                console.log(this.followerArray.id);               
+                console.log(this.followArray.userId);               
             },
             followBtbCheck(){
                 console.log(this.userDisplayId);
@@ -48,6 +48,7 @@ import cookies from "vue-cookies"
                 };
                 };
                 console.log(this.unfollow);
+                console.log(this.followArray.userId) 
             },
             followUser() {
                 console.log(this.userDisplayId)
@@ -60,7 +61,7 @@ import cookies from "vue-cookies"
                     },
                     data:{
                         "loginToken": this.token,
-                        "followId":this.userDisplayId //what is followId
+                        "followId": this.followArray.userId
                     }
                 }).then((response) => {
                     console.log(response.data)
@@ -81,7 +82,7 @@ import cookies from "vue-cookies"
                     },
                     data:{
                         "loginToken": this.token,
-                        // "tweetId":this.userDisplayId
+                        "followId": this.followArray.userId
                     }
                 }).then((response) => {
                     console.log(response.data)

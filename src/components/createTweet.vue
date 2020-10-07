@@ -49,7 +49,7 @@
                 }).then((response)=>{
                     console.log(response);
                     this.submit = true;
-                    this.$store.dispatch("alltweetGet");
+                    location.reload();
                 }).catch((errorMessage)=>{
                     this.submit = false;
                     console.log(errorMessage);

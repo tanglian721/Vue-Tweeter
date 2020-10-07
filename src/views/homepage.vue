@@ -7,13 +7,12 @@
             <transition name="infoBg">
                 <div v-if="info" id="infor-background" @click="infoDisplay"></div>
             </transition>
-            <top-bar></top-bar>
-               <button @click="alltweetGet">get</button> 
+            <top-bar @topic="switchTopic" ></top-bar>
             <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
             <create-tweet v-if="createNew"></create-tweet>
             </transition>
-            <page-content></page-content>
-            <bottom-bar></bottom-bar>
+            <page-content :iftopic="topic"></page-content>
+            <bottom-bar icon="homepage"></bottom-bar>
        </div>
        <div v-else>
            <router-link to="/signin"></router-link>
@@ -41,7 +40,16 @@ import axios from "axios"
         data() {
             return {
                 loginStatus: false,
+                topic:false,
             }
+        },
+        props: {
+            icon:{
+                type:String
+            },
+            iftopic:{ 
+                type:Boolean
+            },
         },
         computed: {
             info(){
@@ -60,70 +68,9 @@ import axios from "axios"
                 this.$router.push("/signin")
                 }
             },
-            getComments(tweet) {
-                axios.request({
-                    url: "https://tweeterest.ml/api/comments",
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-                    },
-                    params:{
-                        "tweetId":tweet.tweetId
-                  }
-                }).then((response) => {
-                  tweet.commentstAmount = response.data.length;
-                  this.$store.commit("pushAllTweet", tweet)
-                }).catch((error) => {
-                    console.log(error)
-                })
+            switchTopic(data) {
+               this.topic = data;
             },
-            getLike(tweet) {
-                axios.request({
-                    url: "https://tweeterest.ml/api/tweet-likes",
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-                    },
-                    params:{
-                        "tweetId":tweet.tweetId
-                  }
-                }).then((response) => {
-                    tweet.likeAmount = response.data.length;
-                            this.getComments(tweet)
-                    // }
-                    // for(let i = 0; i < response.data.length; i++){
-                    //     if( response.data[i].userId == this.user.userId ){
-                    //        this.likeCheck = true
-                    //     }
-                    // }
-                }).catch((error) => {
-                    console.log(error)
-                })
-            },
-            forEachTweet(tweetsArray) {
-                console.log(tweetsArray);
-                for(let i = 0; i < tweetsArray.length; i++){
-                    this.getLike(tweetsArray[i]);
-                }
-            },
-            alltweetGet() {
-               axios.request({
-                  url: "https://tweeterest.ml/api/tweets",
-                  method: "get",
-                   headers: {
-                    "Content-Type": "application/json",
-                    "X-Api-Key":"57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-                }
-            }).then((response) => {
-                console.log(response.data);
-                this.forEachTweet(response.data);
-            }).catch((error) => {
-                console.log(error)
-            })
-           },
-            
             infoDisplay() {
                 this.$store.commit("infoHide")
             },
@@ -145,6 +92,7 @@ import axios from "axios"
                 })
             },
             getFollowers() {
+                console.log(this.getFollows)
                 axios.request({
                     url: "https://tweeterest.ml/api/followers",
                     method: "get",
@@ -153,10 +101,11 @@ import axios from "axios"
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
                     params:{
-                        userId:this.userDisplayId
+                        userId:cookies.get("logininfo").userId
                     }
                 }).then((response) => {
                     this.$store.commit("userFollower", response.data);
+                    console.log(response.data)
                 }).catch((error) => {
                     console.log(error);
                 })
@@ -169,6 +118,7 @@ import axios from "axios"
         mounted () {
             this.loginCheck();
             this.getFollows();
+            this.getFollowers() 
             // this.defaultSet();
         },
     }
@@ -203,7 +153,6 @@ import axios from "axios"
         z-index: 24;
         width: 100%;
         position: sticky;
-        background-color: white;
         height: 8vh;
         bottom: 0;
     }
