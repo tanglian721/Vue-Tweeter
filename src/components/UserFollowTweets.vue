@@ -1,6 +1,6 @@
 <template>
     <div id="userfollowcontent">
-          <div v-if="iftopic">
+          <div v-if="TrendingDisplay">
         <single-tweet class="tweet" v-for="tweet in tweetsByComments" v-bind:key="tweet.tweetId" :tweet=tweet ></single-tweet>
         </div>
         <div v-else>
@@ -24,10 +24,7 @@ import SingleTweet from "./tweet"
             tweet:{
                type:Object,
                requried: true
-            },
-             iftopic:{ 
-                type:Boolean
-            },   
+            }, 
         },
         methods: {
             getComments(tweet) {
@@ -112,11 +109,14 @@ import SingleTweet from "./tweet"
                 return this.$store.getters.userFollowTweetByDate 
             },
             tweetsByComments() {
-                return this.$store.getters.userFollowTweetAllByComments 
+                return this.$store.getters.userFollowTweetAllBylikes 
             },
             userinfo() {
                 return cookies.get("logininfo");
             },
+             TrendingDisplay() {
+                return this.$store.state.TrendingDisplay
+            }
         },
         mounted () {
             this.getUserFollowTweets();

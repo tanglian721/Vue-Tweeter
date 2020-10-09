@@ -12,7 +12,6 @@
                    </div>
                    <h4 v-else-if="editStatus == 'success'"> Comment Updated Successfully </h4>
                    <h4 v-else-if="editStatus == 'error'">{{ errorInfo }}</h4>
-
                    <p v-else id="tweet-text" >{{ comment.content }}</p>
                 <div id="comment-like">
                     <h5 id="like">
@@ -68,7 +67,7 @@
                 deleteStatus:"on",
                 deleteDisplay:false,
                 commentDisplay:true,
-                Imgpath:cookies.get(this.comment.username)
+                
             }
         },
         methods: {
@@ -87,32 +86,23 @@
                         "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                     },
                     params:{
-                        "tweetId":this.comment.commentID
+                        "commentId":this.comment.commentId
                   }
                 }).then((response) => {
-                    console.log(response.data)
                     this.likesNumber = response.data.length
                     for(let i = 0; i < response.data.length; i++){
-                        console.log(response.data[i].username)
-                        console.log(this.user.username);
                         if( response.data[i].username == this.user.username ){
                            this.ifLike = true;
                         }
                     }
-                    console.log(this.ifLike)
                 }).catch((error) => {
-                    console.log("1212")
                     console.log(error)
                 })
             },
             edit() {
                 this.editStatus = true;
-                console.log(this.editStatus)
             },
             commentEdit(){
-                console.log(cookies.get("loginToken"))
-                console.log(this.comment.commentId)
-                console.log(this.comment.content)
                 axios.request({
                     url:"https://tweeterest.ml/api/comments",
                     method:"patch",
@@ -155,9 +145,8 @@
                         "loginToken": cookies.get("loginToken"),
                         "commentId":this.comment.commentId,
                   }
-                }).then((response) => {
-                    console.log(response.data)
-                    // this.commentDisplay = false;
+                }).then(() => {
+                    console.log()
                     setTimeout(() => {
                         this.deleteDisplay = false;
                     }, 1000);
@@ -177,8 +166,6 @@
                 console.log(this.user)
             },
             like() {
-                console.log(this.comment.commentId)
-                console.log(this.token)
                 axios.request({
                     url: "https://tweeterest.ml/api/comment-likes",
                     method: "post",
@@ -194,7 +181,6 @@
                     console.log(response.data);
                     this.getLike()
                 }).catch((error) => {
-                    console.log("1212")
                     console.log(error);
                 })
             },
@@ -212,22 +198,25 @@
                         "commentId":this.comment.commentId
                   }
                 }).then((response) => {
-                    console.log("121")
                     console.log(response.data)
                     this.getLike()
                 }).catch((error) => {
-                    console.log("1212")
                     console.log(error)
                 })
             }
         },
         mounted () {
             this.getLike();
-            // this.test()
         },
         computed: {
              user() {
                 return cookies.get("logininfo");
+            },
+            Imgpath() { if(cookies.get(this.comment.username)!= undefined){
+                return cookies.get(this.comment.username) 
+               } else {
+                return this.$store.state.portrait[0].path
+              }
             }
         },
     }

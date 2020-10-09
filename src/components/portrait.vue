@@ -1,6 +1,6 @@
 <template>
     <div>
-     <img class="img" :src= portrait.path alt="" @click="selectImg"> 
+     <img id="img" :src= portrait.path alt="" @click="selectImg"> 
     </div>
 </template>
 
@@ -9,10 +9,7 @@ import cookies from "vue-cookies"
     export default {
         name:"single-portrait",
         props: {
-            portrait:{
-                type:Object,
-                required:true
-            }
+            portrait:Object
         },
         data() {
             return {
@@ -20,7 +17,8 @@ import cookies from "vue-cookies"
         },
         methods: {
             selectImg() {
-                cookies.set(cookies.get("logininfo").username, this.portrait.path)         
+                cookies.set(cookies.get("logininfo").username, this.portrait.path);
+          
             }
         },
    
@@ -28,11 +26,11 @@ import cookies from "vue-cookies"
 </script>
 
 <style lang="scss" scoped>
-   .img{
+   #img{
        width: 15vw;
        border-radius: 50%;
        filter: drop-shadow(2px 2px 5px gray);
-       &:active{
+       &:focus{
              filter: none;
        }
        

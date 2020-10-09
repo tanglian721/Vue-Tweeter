@@ -25,7 +25,7 @@ const routes = [{
         component: ProfilePage
     },
     {
-        path: "/user",
+        path: "/user/*",
         name: "user-page",
         component: UserPage
     },
@@ -39,8 +39,6 @@ const routes = [{
         name: "user-followpage",
         component: UserFollowpage
     },
-
-
 ];
 
 const router = new VueRouter({

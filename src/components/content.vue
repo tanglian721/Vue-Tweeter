@@ -1,6 +1,7 @@
 <template>
     <div id="content">
-        <div v-if="iftopic">
+        <img  v-if="loadingImg" id="load" src="../assets/loading.gif" alt="">
+        <div v-if="TrendingDisplay">
         <single-tweet class="tweet" v-for="tweet in tweetsByComments" v-bind:key="tweet.tweetId" :tweet=tweet ></single-tweet>
         </div>
         <div v-else>
@@ -18,14 +19,16 @@
         components:{
             SingleTweet
         },
+        data() {
+            return {
+                loadingImg: false
+            }
+        },
         props:{
             tweet:{
                type:Object,
                requried: true
-            },
-            iftopic:{ 
-                type:Boolean
-            },   
+            } 
         },
         methods: {
             getComments(tweet) {
@@ -41,7 +44,8 @@
                   }
                 }).then((response) => {
                   tweet.commentstAmount = response.data.length;
-                  this.$store.commit("pushAllTweet", tweet)
+                  this.$store.commit("pushAllTweet", tweet);
+                  this.loadingImg = false;
                 }).catch((error) => {
                     console.log(error)
                 })
@@ -78,6 +82,7 @@
                 }
             },
             alltweetGet() {
+                this.loadingImg = true;
                 this.$store.commit("clearAllTweet")
                 axios.request({
                   url: "https://tweeterest.ml/api/tweets",
@@ -100,11 +105,14 @@
                 return this.$store.getters.tweetAllByDate 
             },
             tweetsByComments() {
-                return this.$store.getters.tweetAllByComments 
+                return this.$store.getters.tweetAllByLike 
             },
             userinfo() {
                 return cookies.get("logininfo");
             },
+            TrendingDisplay() {
+                return this.$store.state.TrendingDisplay
+            }
         },
         mounted () {
             this.alltweetGet() 
@@ -124,6 +132,9 @@
     width: 90%;
     // background-color: white;
     padding: 2vh;
+}
+#load{
+    width: 100%;
 }
 
 </style>

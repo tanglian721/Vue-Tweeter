@@ -5,11 +5,22 @@
   </div>
 </template>
 
+<script>
+export default {
+  methods: {
+    test11() {
+      console.log("aa")
+      
+    }
+  },
+}
+</script>
 <style lang="scss">
 *{
   margin: 0;
   padding: 0;
 }
-$primaryColor:"#16BDDF"
-
+.calluser{
+            color: red;
+        }
 </style>

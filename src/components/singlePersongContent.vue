@@ -10,6 +10,7 @@
 </template>
 
 <script>
+    import axios from "axios"
     import cookies from "vue-cookies"
     import SingleTweet from "./tweet"  
 
@@ -31,10 +32,23 @@
          
         },
         methods: {
-         
-            singleTweetsGet() {
-                this.$store.dispatch("SingleTweetGet")
-            },
+            singleTweetGet() {
+            axios.request({
+                url: "https://tweeterest.ml/api/tweets",
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                },
+                params: {
+                    "userId": this.userDisplayId
+                }
+            }).then((response) => {
+                this.$store.commit("getOneUserTweets", response.data)
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
             show(){
                console.log(this.userDisplayId)
                console.log(this.userinfo.userId)
@@ -47,7 +61,7 @@
                 return this.$store.state.oneUserTweet 
             },
             userDisplayId(){
-                return cookies.get("userpageId")
+                return this.$router.history.current.params.pathMatch;
             },
             token() {
                 return cookies.get("loginToken")
@@ -58,7 +72,7 @@
       
         },
         mounted () {
-            this. singleTweetsGet()
+            this.singleTweetGet()
         },
     }
 </script>

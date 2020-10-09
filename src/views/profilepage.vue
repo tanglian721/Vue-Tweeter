@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="profile">
         <div id="top">
             <div id="back" @click="backHome"><img src="../assets/back.png" alt=""></div>
         </div>
@@ -24,6 +24,10 @@ import ProfileEdit from "../components/profileEdit"
 </script>
 
 <style lang="scss" scoped>
+    #profile{
+        height: 100vh;
+        overflow: hidden;
+    }
     #top{
         width: 100%;
         height: 20vh;
@@ -42,5 +46,6 @@ import ProfileEdit from "../components/profileEdit"
             }
         }
     }
+ 
 
 </style>

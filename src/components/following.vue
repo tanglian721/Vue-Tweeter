@@ -1,6 +1,6 @@
 <template>
   <div class="follows" @click="toUserPage">
-    <img src="../assets/user (3).png" alt="" />
+    <img :src= Imgpath  alt="" />
     <div class="info">
        <h3>{{ followArray.username }}</h3>
        <p>{{ followArray.email }}</p>
@@ -105,7 +105,13 @@ import cookies from "vue-cookies"
           },
           userFollow() {
             return this.$store.state.following;
-          }
+          },
+          Imgpath() { if(cookies.get(this.followArray.username)!= undefined){
+                return cookies.get(this.followArray.username) 
+            } else {
+                return this.$store.state.portrait[0].path
+            }
+           }
         },
         mounted () {
             this.followBtbCheck()
@@ -126,6 +132,7 @@ import cookies from "vue-cookies"
     grid-template-columns: 1fr 6fr 1fr;
     img{
         height: 6vh;
+        border-radius: 50%;
     };
     h3{
         font-size: 1rem;

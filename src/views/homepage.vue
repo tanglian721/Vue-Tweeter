@@ -7,11 +7,11 @@
             <transition name="infoBg">
                 <div v-if="info" id="infor-background" @click="infoDisplay"></div>
             </transition>
-            <top-bar @topic="switchTopic" ></top-bar>
+            <top-bar ></top-bar>
             <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
             <create-tweet v-if="createNew"></create-tweet>
             </transition>
-            <page-content :iftopic="topic"></page-content>
+            <page-content></page-content>
             <bottom-bar icon="homepage"></bottom-bar>
        </div>
        <div v-else>
@@ -40,15 +40,11 @@ import axios from "axios"
         data() {
             return {
                 loginStatus: false,
-                topic:false,
             }
         },
         props: {
             icon:{
                 type:String
-            },
-            iftopic:{ 
-                type:Boolean
             },
         },
         computed: {
@@ -67,9 +63,6 @@ import axios from "axios"
                 } else{
                 this.$router.push("/signin")
                 }
-            },
-            switchTopic(data) {
-               this.topic = data;
             },
             infoDisplay() {
                 this.$store.commit("infoHide")

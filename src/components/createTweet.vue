@@ -3,7 +3,13 @@
   <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
     <div v-if="submit === 'on'" id="text-area">
       <img id="userImg" src="../assets/user (2).png">
-      <textarea name="" id="new-tweet" cols="30" rows="10" v-model="textContent" ></textarea>
+      <div id="new-tweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag" @keypress.space ="hashTagEnd"></div>
+      <div id="users" v-if="usersdisplay">
+         <user-array v-for="user in users" :key="user.userId" :userArray="user" @selectuser="setUser"></user-array>
+      </div>
+      <div v-if="hashtagdisplay" id="hashTag-area">
+         {{ hashText }}
+      </div>
     </div>
     <div class="message" v-else-if="submit === true">
       <h2 >Tweet Created Sucessful!</h2>
@@ -18,21 +24,46 @@
 </template>
 
 <script>
-    import cookies from "vue-cookies"
-    import axios from "axios"
-    export default {
+import UserArray from "../components/@array"  
+import cookies from "vue-cookies"
+import axios from "axios"
+export default {
         name: "create-tweet",
+        components:{
+            UserArray
+        },
         data() {
             return {
                 textContent:"What's happening?",
                 submit:"on",
                 errorInfo:"",
+                users:[],
+                usersdisplay:false,
+                hashtagdisplay: false,
+                contentBefore:'sdas',
+                hashText: ""
+            }
+        },
+        props:{
+             userArray:{
+                type:Object,
+                require:true
             }
         },
         methods: {
+            open(data) {
+                console.log("dsa");
+                console.log(data);
+                cookies.set("userpageId", data)
+                this.$router.push("/user")
+            },
             test() {
                console.log(this.token)
                console.log(this.textContent)
+            },
+            onEdit(event) {
+                this.textContent = event.target.innerHTML;
+                console.log(this.textContent)
             },
             createTweet(){
                 axios.request({
@@ -56,6 +87,53 @@
                     this.errorInfo = errorMessage;
                 })
             },
+            getusers() {
+                console.log('list')
+                this.usersdisplay = true;
+                axios.request({
+                 url: "https://tweeterest.ml/api/users",
+                 method: "get",
+                 headers: {
+                     "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                 },
+             }).then((response) => {
+                 console.log(response.data);
+                 this.users = response.data;
+             }).catch((error) => {
+                 console.log(error);
+             })
+            },
+            setUser(data) {
+                console.log(data);
+                this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='calluser' href='#/user/" + data.userId+ "'><u>@" + data.username + "</u></a> &nbsp";
+                this.usersdisplay = false;
+            },
+            hashTag(){
+                this.hashtagdisplay = true;
+                console.log('a')
+                document.getElementById('new-tweet').addEventListener("keypress",(letter) => {
+                   this.hashText = this.hashText + letter.key;
+                   console.log(this.hashText);
+                }, true),
+                this.textContent = this.textContent + this.hashText;
+                console.log(this.textContent );
+                
+                // let before = this.textContent.slice(0, this.textContent.length-1); 
+                // this.textContent = "";
+                // this.textContent =before + "<h2 class='calluser' >" + this.textContent + "</h2>"
+
+            },
+            hashTagEnd() {
+                console.log("sdas");
+                document.getElementById('new-tweet').removeEventListener("keypress",(letter) => {
+                   this.hashText = this.hashText + letter.key;
+                   console.log(this.hashText);
+                }, true),
+                this.textContent = this.textContent + "<h2>#" +this.hashText + "</h2>";
+                document.getElementById('new-tweet').selectionStart = document.getElementById('new-tweet').selectionEnd;
+                console.log(this.textContent);
+               
+            },
             reCreate(){
                 this.submit = "on"
             },
@@ -67,6 +145,8 @@
             token() {
                 return cookies.get("loginToken")
             }
+        },
+        mounted () {
         }
     }
 </script>
@@ -88,11 +168,13 @@
             position: absolute;
             top: 0;
         }
-        textarea{
-            border: none;
+        #new-tweet{
+            // display: block;
+            border: 1px solid black;
+            height: 15vh;
+            // background-color: blue;
             box-sizing: border-box;
             width: 70%;
-            height: 70%;
             margin-left: 20%;
         }
     }
@@ -104,6 +186,11 @@
         border-radius: 04rem;
         margin-left:70%;
         margin-top: 1vh;
+    }
+    #users{
+        width: 100%;
+        height:30vh;
+        overflow: scroll;
     }
     .message{
         display: grid;

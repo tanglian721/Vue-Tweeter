@@ -1,6 +1,6 @@
 <template>
     <div class="followers">
-      <img src="../assets/user (3).png" alt="">
+      <img :src= Imgpath  alt="">
        <div class="info">
          <h3>{{ followerArray.username }}</h3>
           <p>{{ followerArray.email }}</p>
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+    import cookies from "vue-cookies"
     export default {
         name: "followers-area",
         props:{
@@ -18,6 +19,14 @@
                 type:Object,
                 required:true
             }    
+        },
+        computed: {
+           Imgpath() { if(cookies.get(this.followerArray.username)!= undefined){
+                return cookies.get(this.followerArray.username) 
+            } else {
+                return this.$store.state.portrait[0].path
+            }
+           }
         },
     
     }
@@ -34,6 +43,7 @@
     grid-template-columns: 1fr 6fr 1fr;
     img{
         height: 6vh;
+        border-radius: 50%;
     };
     h3{
         font-size: 1rem;

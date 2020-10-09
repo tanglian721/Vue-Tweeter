@@ -3,7 +3,7 @@
        <img src="../assets/logo.png">
        <login-form id="login-form"></login-form>
         <transition  enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
-       <signup-form v-if="signUp" id="sign-up"></signup-form>
+           <signup-form v-if="signUp" id="sign-up"></signup-form>
         </transition>
 
     </div>

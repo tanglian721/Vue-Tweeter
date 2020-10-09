@@ -6,12 +6,12 @@
             <transition name="infoBg">
                 <div v-if="info" id="infor-background" @click="infoDisplay"></div>
             </transition>
-            <top-bar @topic="switchTopic"></top-bar>
+            <top-bar></top-bar>
                <!-- <button @click="alltweetGet">get</button>  -->
             <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
             <create-tweet v-if="createNew"></create-tweet>
             </transition>
-            <user-followtweets :iftopic="topic"></user-followtweets>
+            <user-followtweets></user-followtweets>
             <bottom-bar icon="userfollow"></bottom-bar>
     </div>
 </template>
@@ -33,16 +33,13 @@ import CreateTweet from "../components/createTweet.vue"
         },
         data() {
             return {
-                topic:false,
             }
         },
         props: {
             icon:{
                 type:String
             },
-            iftopic:{ 
-                type:Boolean
-            },
+          
         },
         computed: {
             info(){
@@ -57,9 +54,7 @@ import CreateTweet from "../components/createTweet.vue"
             infoDisplay() {
                 this.$store.commit("infoHide")
             },
-             switchTopic(data) {
-               this.topic = data;
-            },
+         
         },
     }
 </script>

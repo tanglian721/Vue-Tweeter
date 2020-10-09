@@ -7,7 +7,8 @@
                     <h3 id="name" @click="toUserPage">{{ tweet.username }}</h3> 
                     <h6 id="date">{{ tweet.createdAt }}</h6>
                 </div>
-                <p id="tweet-text" @click="toOneTweetPage">{{ tweet.content }}</p>
+
+                <p id="tweet-text" v-html="content.firstChild.innerHTML"></p>
                 <div id="comment-like">
                     <h5 id="comment">
                         <img src="../assets/speech.png" alt="" @click="commentShow">
@@ -73,6 +74,7 @@
         },
         data() {
             return {
+                text:" <span @click='tsdasda'>Back</span> hahaah<h2 id='haha' @click='open(51)''><u>@taylor</u></h2>",
                 comments: [],
                 editDisplay:false,
                 deleteDisplay:false,
@@ -83,7 +85,6 @@
                 deleteId:"",
                 deleteStatus:"on",
                 errorInfo:"",
-                Imgpath:cookies.get(this.tweet.username)
             }
         },
         props:{
@@ -101,6 +102,15 @@
             }
         },
         methods: {
+            open(data) {
+                console.log("dsa");
+                console.log(data);
+                cookies.set("userpageId", data)
+                this.$router.push("/user")
+            },
+            test(){
+                console.log('dsad')
+            },
             edit() {
                 this.editDisplay = true
             },
@@ -117,7 +127,7 @@
             toUserPage(){
                 this.$store.commit("DispalyUserIDget", this.tweet.userId)
                 cookies.set("userpageId", this.tweet.userId )
-                this.$router.push("/user")
+                this.$router.push("/user/" + this.tweet.userId)
             },
             toOneTweetPage(){
                 this.$store.commit("tweetIdget", this.tweet.tweetId)
@@ -138,8 +148,8 @@
                   }
                 }).then((response) => {
                     console.log(response.data)
-                    this.deleteStatus = true,
-                    this.$store.dispatch("alltweetGet")
+                    this.deleteStatus = true;
+                    location.reload();
                 }).catch((errorMessage) => {
                      this.deleteStatus = false 
                     this.errorInfo = errorMessage
@@ -223,11 +233,19 @@
           
             token() {
                 return cookies.get("loginToken")
+            },
+            content() {
+                return new DOMParser().parseFromString(this.tweet.content, "text/html")
+            },
+            Imgpath() { if(cookies.get(this.tweet.username)!= undefined){
+                return cookies.get(this.tweet.username) 
+            } else {
+                return this.$store.state.portrait[0].path
             }
+        
+            },
         },
         mounted () {
-            // this.getComments();
-            // this.getLike()
         },
         
     }
@@ -255,6 +273,9 @@
     }
     #tweet-text{
         margin-top: 2vh;
+        #haha{
+          color: blue;
+   }
     }
     #comment-like{
         display: flex;
@@ -309,7 +330,11 @@
         #back{
             background-color: #B2F7EF;
         }
+        
    }
+.calluser{
+            color: red;
+        }
    
 
 }

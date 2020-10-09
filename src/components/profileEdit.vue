@@ -50,7 +50,6 @@ import signUpApi from "axios"
                 birthday: "birthday",
                 bio: "bio",
                 edit: false,
-                Imgpath:cookies.get(cookies.get("logininfo").username)
             }
         },
         methods: {           
@@ -81,7 +80,8 @@ import signUpApi from "axios"
                 }).then((response)=>{
                     console.log(response.data)
                     cookies.set("logininfo",response.data)
-                    this.edit = false
+                    this.edit = false;
+                    location.reload();
                 }).catch((error)=>{
                     console.log(error)
                 })
@@ -94,6 +94,12 @@ import signUpApi from "axios"
             },
             token() {
                 return cookies.get("loginToken")
+            }, 
+            Imgpath() { if(cookies.get(cookies.get("logininfo").username)!= undefined){
+                return cookies.get(cookies.get("logininfo").username) 
+            } else {
+                return this.$store.state.portrait[0].path
+            }
             }
         },
          mounted () {

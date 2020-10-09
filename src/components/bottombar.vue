@@ -8,7 +8,7 @@
         <img v-if="this.icon == 'userfollow'" src="../assets/userlist_A.png" alt="" >
         <img v-else src="../assets/userlist.png" alt="" @click="userFollow">
         </div>
-        <img src="../assets/backBlack.png" alt="" @click="back">
+        <img src="../assets/backBlack.png" alt=""  @click="back">
         <img id="createBtn" src="../assets/createBtn.png" @click="createNew">
     </div>
 </template>
@@ -32,6 +32,7 @@
                 this.$router.push("/userfollow")
             },
             back() {
+                console.log("asa")
                   window.history.back();
             },
             test() {
@@ -45,7 +46,7 @@
 
 <style lang="scss" scoped>
     #bottom-bar{
-        background-color: rgba(59, 59, 59, 0.6);
+        background-color: rgba(122, 122, 122, 0.6);
         position: relative;
         display: inline-flex;
         justify-content: space-evenly;

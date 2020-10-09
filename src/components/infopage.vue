@@ -41,7 +41,6 @@ import cookies from "vue-cookies"
                 email:"email",
                 birthday: "birthday",
                 bio: "bio",
-                Imgpath:cookies.get(cookies.get("logininfo").username)
             }
         },
         methods: {
@@ -72,6 +71,12 @@ import cookies from "vue-cookies"
         computed: {
             userinfo() {
                 return cookies.get("logininfo");
+            },
+            Imgpath() { if(cookies.get(cookies.get("logininfo").username)!= undefined){
+                return cookies.get(cookies.get("logininfo").username) 
+            } else {
+                return this.$store.state.portrait[0].path
+            }
             },
             follower() {
                 return this.$store.state.follower.length;

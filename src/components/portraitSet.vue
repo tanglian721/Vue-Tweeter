@@ -17,10 +17,8 @@
             }
         },
         props: {
-            portrait:{
-                type:Object,
-                required:true
-            }
+            portrait:Object
+         
         }
     }
 </script>

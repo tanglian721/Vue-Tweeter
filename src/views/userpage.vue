@@ -42,8 +42,7 @@
             <!-- <transition  mode="out-in" enter-active-class="animate__animated animate__slideInLeft" 
             leave-active-class="animate__animated animate__slideOutRight"> -->
       <single-content 
-        v-if="bottomDisplay == 'tweet'" 
-        key="content"></single-content>
+        v-if="bottomDisplay == 'tweet'" key="content"></single-content>
       <followers-area 
         v-else-if="bottomDisplay == 'followers'"  
         v-for="follower in followers" 
@@ -242,8 +241,11 @@ export default {
             userinfo() {
                 return cookies.get("logininfo");
             },
+            // userDisplayId() {
+            //     return cookies.get("userpageId");
+            // },
             userDisplayId() {
-                return cookies.get("userpageId");
+                return this.$router.history.current.params.pathMatch;
             },
             userFollow() {
                 return this.$store.state.following;
