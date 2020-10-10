@@ -23,4 +23,7 @@ export default {
 .calluser{
             color: red;
         }
+.hash{
+  color: coral;
+}
 </style>

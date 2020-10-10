@@ -11,7 +11,8 @@
             <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
             <create-tweet v-if="createNew"></create-tweet>
             </transition>
-            <page-content></page-content>
+            <topic-tweet v-if="topicDisplay"></topic-tweet>
+            <page-content v-else></page-content>
             <bottom-bar icon="homepage"></bottom-bar>
        </div>
        <div v-else>
@@ -27,6 +28,7 @@ import BottomBar from "../components/bottombar.vue"
 import PageContent from "../components/content.vue"
 import InfoPage from "../components/infopage.vue"
 import CreateTweet from "../components/createTweet.vue"
+import TopicTweet from "../components/topic.vue"
 import axios from "axios"
     export default {
         name:"landing-page",
@@ -35,11 +37,13 @@ import axios from "axios"
             BottomBar,
             PageContent,
             InfoPage,
-            CreateTweet
+            CreateTweet,
+            TopicTweet
         },
         data() {
             return {
-                loginStatus: false,
+                loginStatus: false,  
+                // topicDisplay: this.$store.state.topicdisplay            
             }
         },
         props: {
@@ -51,10 +55,15 @@ import axios from "axios"
             info(){
                 return this.$store.state.infoForm
             },
+            topicDisplay() {
+                return this.$store.state.topicdisplay
+            },
             createNew(){
                 return this.$store.state.createArea
+            },
+            allTweets() {
+                return this.$store.getters.tweetAllByDate
             }
-            
         },
         methods: {
             loginCheck() {
@@ -106,13 +115,15 @@ import axios from "axios"
             defaultSet() {
                 this.$store.commit("infoHide");
                 this.$store.commit("createHide");
-            }
+            },
+       
         },
         mounted () {
             this.loginCheck();
             this.getFollows();
             this.getFollowers() 
             // this.defaultSet();
+
         },
     }
 </script>
@@ -167,6 +178,10 @@ import axios from "axios"
         top: 30vh;
         left: 10%;
         filter: drop-shadow(2px 2px 5px gray);
+    }
+    #topic{
+        width: 80%;
+        margin-left: 10%;
     }
     .info-enter, .info-leave-to{
     transform: translateX(-100%);

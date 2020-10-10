@@ -3,8 +3,11 @@
         <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
         <div v-if="submit === 'on'" id="text-area">
         <img id="userImg" src="../assets/user (2).png">
-        <textarea name="" id="editTweet" cols="30" rows="10" v-model="editTweet.content"></textarea>
+        <div id="edittweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers"></div>
         </div>
+         <div id="users" v-if="usersdisplay">
+         <user-array v-for="user in users" :key="user.userId" :userArray="user" @selectuser="setUser"></user-array>
+       </div>
         <div class="message" v-else-if="submit === true">
             <h2 >Tweet Editd Sucessful!</h2>
             <span @click="backHome" >Back</span>   
@@ -18,15 +21,23 @@
 </template>
 
 <script>
+import UserArray from "../components/@array"  
+
     import cookies from "vue-cookies"
     import axios from "axios"
     export default {
         name: "edit-tweet",
+        components:{
+            UserArray
+
+        },
         data() {
             return {
-                textContent:"What's happening?",
+                textContent:this.editTweet.content,
                 submit:"on",
+                users:[],
                 errorInfo:"",
+                usersdisplay:false,
             }
         },
         props:{
@@ -52,16 +63,42 @@
                   data:{
                     "loginToken": this.token,
                     "tweetId": this.editTweet.tweetId,
-                    "content": this.editTweet.content
+                    "content": this.textContent
                   }
                 }).then((response)=>{
                     console.log(response)
-                    this.submit = true
+                    this.submit = true;
+                    location.reload();
                 }).catch((errorMessage)=>{
                     this.submit = false,
                     console.log(errorMessage)
                     this.errorInfo = errorMessage
                 })
+            },
+             onEdit(event) {
+                this.textContent = event.target.innerHTML;
+                console.log(this.textContent)
+            },
+            getusers() {
+                console.log('list')
+                this.usersdisplay = true;
+                axios.request({
+                 url: "https://tweeterest.ml/api/users",
+                 method: "get",
+                 headers: {
+                     "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                 },
+             }).then((response) => {
+                 console.log(response.data);
+                 this.users = response.data;
+             }).catch((error) => {
+                 console.log(error);
+             })
+            },
+            setUser(data) {
+                console.log(data);
+                this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='calluser' href='#/user/" + data.userId+ "'><u>@" + data.username + "</u></a> &nbsp";
+                this.usersdisplay = false;
             },
             reEdit(){
                 this.submit = "on"
@@ -95,11 +132,12 @@
             position: absolute;
             top: 0;
         }
-        textarea{
-            border: none;
+        #edittweet{
+            border: 1px solid black;
+            height: 15vh;
+            // background-color: blue;
             box-sizing: border-box;
             width: 70%;
-            height: 70%;
             margin-left: 20%;
         }
     }

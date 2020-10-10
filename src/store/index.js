@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
-// import cookies from "vue-cookies";
+import cookies from "vue-cookies"
+
 // import axios from "axios"
 
 Vue.use(Vuex);
@@ -19,6 +20,9 @@ export default new Vuex.Store({
         singleTweet: "",
         following: [],
         follower: [],
+        calledTweet: [],
+        topicArray: [],
+        topicdisplay: false,
         portrait: [{
                 id: 0,
                 path: "https://lh3.googleusercontent.com/ae_hkmR-pHPKzKEPAASoX43w1nDjYnXkEl0wspuSLnXa6c0uvvDWHDiqae_bO45KVK1l1AlYgv3wuSVRSbjZ326R9su31EIeX_TvjlJXxYfRTW3t47Mo-YiyvYoLUYIgt9IlQseD-8y9bgBmCccg_iCjpgWLwANjWFcCJbB_Iaust1CC6nyxjaYIvzDpMzRTAB9TptWdYJ8OxjBNG1vjsA4H0fN_tLNLTrjiFM2SAaljclEQX3LUsk7onpRORCZ-SEkgNJT-pGP3UWj7-kkJFvpCL2rcwdudu4E8Le906O2Jo7-o6NcamsetD7t_zu8aPWcrxWR-gxAwsU161wgk-Qju2GGHqxHL-A1MmC8MfD3zGj0Gyij_vt72Wc2gV-4tCG98n7A6VKIIyGbR5bw_X14HFoomlouVar69glAuAZacN75p5TQyA_5TVN7gXAVaNWr_sNNgLJRyUsCGUubIZsdDxXW3fHul7FCaKmZ8VyU_BTTi7mfBJZFyN6z173xvd_-mOz7S24rhwSGH_AvCch-4SuqrlHbU2gKHuaOqOp0hPZSrjxjlkA8qcL2gMTypOXtcgVgorayltYg3D3kPwzhDcNpN1do-GWj1-Ka1qt0V_vQkFxBMYWPoCzjBC0UEuuLAVS1Yjeio3gpyW1HJdL_-W_hi83F-EjXESlR2UrN_nSSgqdAxxj5En7s=w459-h435-no?authuser=1"
@@ -98,6 +102,12 @@ export default new Vuex.Store({
         createHide: function(state) {
             state.createArea = false;
         },
+        topicShow: function(state) {
+            state.topicdisplay = true;
+        },
+        topicHide: function(state) {
+            state.topicdisplay = false;
+        },
         userFollowing: function(state, array) {
             state.following = array;
         },
@@ -118,6 +128,7 @@ export default new Vuex.Store({
         },
         clearAllTweet(state) {
             state.allTweets = [];
+            state.calledTweet = [];
         },
         clearFollowTweet(state) {
             state.followTweets = [];
@@ -127,44 +138,11 @@ export default new Vuex.Store({
         },
         pushFollowTweet(state, tweet) {
             state.followTweets.push(tweet);
-        }
-    },
-    actions: {
-        // alltweetGet(context) {
-        //     axios.request({
-        //         url: "https://tweeterest.ml/api/tweets",
-        //         method: "get",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-        //         }
-        //     }).then((response) => {
-        //         context.commit("getHomeTweets", response.data);
-        //     }).catch((error) => {
-        //         console.log("1212")
-        //         console.log(error)
-        //     })
-        // },
-        // SingleTweetGet(context) {
-        //     axios.request({
-        //         url: "https://tweeterest.ml/api/tweets",
-        //         method: "get",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "X-Api-Key": "57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
-        //         },
-        //         params: {
-        //             "userId": cookies.get("userpageId")
-        //         }
-        //     }).then((response) => {
-        //         console.log(response)
-        //         context.commit("getOneUserTweets", response.data)
-        //     }).catch((error) => {
-        //         console.log(error)
-        //     })
-        // }
+        },
+
 
     },
+    actions: {},
     modules: {},
     getters: {
         tweetAllByDate: function(state) {
@@ -207,7 +185,8 @@ export default new Vuex.Store({
                 }
                 return comparision
             }
-            return state.allTweets.sort(compare);
+            state.topicArray = state.allTweets.sort(compare)
+            return state.topicArray;
         },
         userFollowTweetByDate: function(state) {
             function compare(a, b) {
@@ -251,5 +230,14 @@ export default new Vuex.Store({
             }
             return state.followTweets.sort(compare);
         },
+        noticeTweet(state) {
+            let user = "@" + cookies.get("logininfo").username;
+            for (let i = 0; i < state.allTweets.length; i++) {
+                if (state.allTweets[i].content.includes(user) == true && state.calledTweet.includes(state.allTweets[i]) == false) {
+                    state.calledTweet.push(state.allTweets[i])
+                }
+            }
+            return state.calledTweet
+        }
     }
 });

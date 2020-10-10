@@ -6,6 +6,7 @@ import ProfilePage from "../views/profilepage.vue"
 import UserPage from "../views/userpage.vue"
 import OnetweetPage from "../views/oneTweetpage.vue"
 import UserFollowpage from "../views/userfollowpage.vue"
+import CalledTweetpage from "../views/calledTweetpage.vue"
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,12 @@ const routes = [{
         name: "user-followpage",
         component: UserFollowpage
     },
+    {
+        path: "/calledpage",
+        name: "called-tweetpage",
+        component: CalledTweetpage
+    },
+
 ];
 
 const router = new VueRouter({

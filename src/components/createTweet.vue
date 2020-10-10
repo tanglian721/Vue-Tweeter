@@ -3,13 +3,11 @@
   <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
     <div v-if="submit === 'on'" id="text-area">
       <img id="userImg" src="../assets/user (2).png">
-      <div id="new-tweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag" @keypress.space ="hashTagEnd"></div>
-      <div id="users" v-if="usersdisplay">
+      <div id="new-tweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag"></div>
+      <div id="users" v-if="usersdisplay" @click="hashTagEnd">
          <user-array v-for="user in users" :key="user.userId" :userArray="user" @selectuser="setUser"></user-array>
       </div>
-      <div v-if="hashtagdisplay" id="hashTag-area">
-         {{ hashText }}
-      </div>
+      <input v-if="hashtagdisplay" id="hashTag-area"  @click="hashTagEnd" v-model="hashText" @keydown.enter="hashTagEnd">    
     </div>
     <div class="message" v-else-if="submit === true">
       <h2 >Tweet Created Sucessful!</h2>
@@ -41,7 +39,7 @@ export default {
                 usersdisplay:false,
                 hashtagdisplay: false,
                 contentBefore:'sdas',
-                hashText: ""
+                hashText: "#",
             }
         },
         props:{
@@ -110,29 +108,13 @@ export default {
             },
             hashTag(){
                 this.hashtagdisplay = true;
-                console.log('a')
-                document.getElementById('new-tweet').addEventListener("keypress",(letter) => {
-                   this.hashText = this.hashText + letter.key;
-                   console.log(this.hashText);
-                }, true),
-                this.textContent = this.textContent + this.hashText;
-                console.log(this.textContent );
-                
-                // let before = this.textContent.slice(0, this.textContent.length-1); 
-                // this.textContent = "";
-                // this.textContent =before + "<h2 class='calluser' >" + this.textContent + "</h2>"
-
+                setTimeout(() => {
+                    document.getElementById('hashTag-area').focus();
+                }, 500);
             },
             hashTagEnd() {
-                console.log("sdas");
-                document.getElementById('new-tweet').removeEventListener("keypress",(letter) => {
-                   this.hashText = this.hashText + letter.key;
-                   console.log(this.hashText);
-                }, true),
-                this.textContent = this.textContent + "<h2>#" +this.hashText + "</h2>";
-                document.getElementById('new-tweet').selectionStart = document.getElementById('new-tweet').selectionEnd;
-                console.log(this.textContent);
-               
+                 this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<span class='hash'><u>" + this.hashText + "</u></span> &nbsp"
+                 this.hashtagdisplay = false;
             },
             reCreate(){
                 this.submit = "on"
@@ -209,6 +191,9 @@ export default {
             font-size: 1rem;
             color: white; 
         }
+    }
+    #hashTag-area{
+        margin-left: 20%;
     }
 }
  

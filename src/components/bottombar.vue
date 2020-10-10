@@ -8,7 +8,14 @@
         <img v-if="this.icon == 'userfollow'" src="../assets/userlist_A.png" alt="" >
         <img v-else src="../assets/userlist.png" alt="" @click="userFollow">
         </div>
-        <img src="../assets/backBlack.png" alt=""  @click="back">
+        <div id="at" @click="toCallPage">
+            <img src="../assets/at.png" alt="">
+            <p v-if="this.newNumber > 0" id="number">{{ newNumber }}</p>
+        </div>
+        <div>
+        <img v-if="topicDisplay" src="../assets/backBlack.png" alt=""  @click="toall">
+        <img v-else src="../assets/backBlack.png" alt=""  @click="back">
+        </div>
         <img id="createBtn" src="../assets/createBtn.png" @click="createNew">
     </div>
 </template>
@@ -21,6 +28,14 @@
                 type:String
             }
         },
+        computed: {
+            newNumber() {
+                return this.$store.getters.noticeTweet.length
+            },
+             topicDisplay() {
+                return this.$store.state.topicdisplay
+            },
+        },
         methods: {
             createNew() {
                 this.$store.commit("createShow")
@@ -31,12 +46,19 @@
             userFollow() {
                 this.$router.push("/userfollow")
             },
+            toCallPage() {
+                this.$router.push("/calledpage")
+            },
             back() {
                 console.log("asa")
                   window.history.back();
             },
             test() {
                 console.log(this.icon)
+            },
+            toall() {
+                this.$store.commit("topicHide");               
+
             }
 
         },
@@ -62,5 +84,15 @@
         height: 15vw;
         filter: drop-shadow(2px 2px 5px gray);
     }
+    }
+    #at{
+        position: relative;
+        #number{
+            position: absolute;
+            top: 0;
+            right: -2vw;
+            font-size: 1.5rem;
+            color:red;
+        }
     }
 </style>

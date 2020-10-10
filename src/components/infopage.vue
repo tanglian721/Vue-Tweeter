@@ -11,17 +11,17 @@
                <span id="follower"> follower : {{ follower }}</span>
             </p>
         </div>
-        <div id="userFunction">
-             <h3 id="profile">
-                 <img src="../assets/user (1).png" alt="" @click="profile">
+        <div id="userFunction" >
+             <h3 id="profile" @click="profile">
+                 <img src="../assets/user (1).png" alt="" >
                  Profile
              </h3>
-             <h3 id="list">
-                 <img src="../assets/align-left.png" alt="">
+             <h3 id="list" @click="userPage">
+                 <img src="../assets/align-left.png" alt=""  >
                  List
              </h3>
-             <h3 id="topic">
-                 <img src="../assets/trending.png" alt="">
+             <h3 id="topic" @click="topic">
+                 <img src="../assets/topic_A.png" alt="" >
                  Topic
              </h3>
         </div>
@@ -65,6 +65,10 @@ import cookies from "vue-cookies"
                 cookies.set("userpageId", this.userinfo.userId );
                 this.$store.commit("infoHide");
                 this.$router.push("/user");
+            },
+            topic() {
+                this.$store.commit("infoHide");
+                this.$store.commit("topicShow");               
             }
 
         },
