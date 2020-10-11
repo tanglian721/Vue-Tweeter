@@ -1,23 +1,27 @@
 <template>
   <div id="create-tweet">
-  <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
+    <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
     <div v-if="submit === 'on'" id="text-area">
-      <img id="userImg" src="../assets/user (2).png">
-      <div id="new-tweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag"></div>
-      <div id="users" v-if="usersdisplay" @click="hashTagEnd">
+       <img id="userImg" src="../assets/user (2).png">
+       <div id="new-tweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag">
+       </div>
+       <div id="users" v-if="usersdisplay" @click="hashTagEnd">
          <user-array v-for="user in users" :key="user.userId" :userArray="user" @selectuser="setUser"></user-array>
-      </div>
-      <input v-if="hashtagdisplay" id="hashTag-area"  @click="hashTagEnd" v-model="hashText" @keydown.enter="hashTagEnd">    
-    </div>
-    <div class="message" v-else-if="submit === true">
-      <h2 >Tweet Created Sucessful!</h2>
-      <span @click="backHome" >Back</span>   
-    </div>
-    <div class="message" v-else-if="submit === false">
-      <h2 >Error Message: {{submit}}   </h2>
-      <span @click="reCreate" >Write Again</span>   
-    </div>
-    <button id="submit" @click="createTweet">tweet</button>
+       </div>
+       <div v-if="hashtagdisplay"  id="hashTag-area" >
+           <input  @click="hashTagEnd" id="hashTag-text" v-model="hashText" @keydown.enter="hashTagEnd">
+           <p class="hashTags" v-for="hashTag in hashTags" :key="hashTag.tag" @click="tag(hashTag.tag)">#{{ hashTag.tag }}</p>  
+        </div>
+        <div class="message" v-else-if="submit === true">
+           <h2 >Tweet Created Sucessful!</h2>
+           <span @click="backHome" >Back</span>   
+        </div>
+        <div class="message" v-else-if="submit === false">
+           <h2 >Error Message: {{submit}}   </h2>
+           <span @click="reCreate" >Write Again</span>   
+        </div>
+        <button id="submit" @click="createTweet">tweet</button>
+  </div>
   </div>
 </template>
 
@@ -109,11 +113,17 @@ export default {
             hashTag(){
                 this.hashtagdisplay = true;
                 setTimeout(() => {
-                    document.getElementById('hashTag-area').focus();
-                }, 500);
+                    document.getElementById('hashTag-text').focus();
+                }, 200);
             },
             hashTagEnd() {
-                 this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<span class='hash'><u>" + this.hashText + "</u></span> &nbsp"
+                
+                 this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='hash' href='#/topic/" + this.hashText.slice(1, this.hashText.length) + "'><u>" + this.hashText+ "</u></a> &nbsp"
+                 this.hashtagdisplay = false;
+            },
+            tag(data) {
+                
+                this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='hash' href='#/topic/" + data + "'><u>#" + data + "</u></a> &nbsp"
                  this.hashtagdisplay = false;
             },
             reCreate(){
@@ -126,6 +136,9 @@ export default {
         computed: {
             token() {
                 return cookies.get("loginToken")
+            },
+            hashTags(){
+                 return this.$store.getters.hashtagTopic
             }
         },
         mounted () {
@@ -194,6 +207,12 @@ export default {
     }
     #hashTag-area{
         margin-left: 20%;
+        .hashTags {
+            width: 80%;
+            border-bottom: 1px solid black;
+            margin-top: 1vh;
+            color: chocolate;
+        }
     }
 }
  

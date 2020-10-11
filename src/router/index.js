@@ -7,6 +7,7 @@ import UserPage from "../views/userpage.vue"
 import OnetweetPage from "../views/oneTweetpage.vue"
 import UserFollowpage from "../views/userfollowpage.vue"
 import CalledTweetpage from "../views/calledTweetpage.vue"
+import SingleTopic from "../views/SingleTopicpage.vue"
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,11 @@ const routes = [{
         path: "/user/*",
         name: "user-page",
         component: UserPage
+    },
+    {
+        path: "/topic/*",
+        name: "single-topic",
+        component: SingleTopic
     },
     {
         path: "/tweet",

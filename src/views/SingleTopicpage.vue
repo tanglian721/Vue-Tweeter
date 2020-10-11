@@ -1,6 +1,5 @@
 <template>
-    <div id="homepage">
-       <div v-if="loginStatus" id="display">
+    <div id="singleTopic">
             <transition name="info">
                <info-page v-if="info" ></info-page>
             </transition>
@@ -12,39 +11,30 @@
             <create-tweet v-if="createNew"></create-tweet>
             </transition>
             <topic-tweet v-if="topicDisplay"></topic-tweet>
-            <page-content v-else></page-content>
+            <detail-topic v-else></detail-topic>
             <bottom-bar icon="homepage"></bottom-bar>
        </div>
-       <div v-else>
-           <router-link to="/signin"></router-link>
-       </div>
-    </div>
+
 </template>
 
 <script>
 import cookies from "vue-cookies"
 import TopBar from "../components/topbar.vue"
 import BottomBar from "../components/bottombar.vue"
-import PageContent from "../components/content.vue"
 import InfoPage from "../components/infopage.vue"
 import CreateTweet from "../components/createTweet.vue"
 import TopicTweet from "../components/topic.vue"
 import axios from "axios"
+import DetailTopic from "../components/detailTopic"
     export default {
-        name:"landing-page",
-        components:{
-            TopBar,
+        name: "single-topic",
+        components: {
+             TopBar,
             BottomBar,
-            PageContent,
             InfoPage,
             CreateTweet,
+            DetailTopic,
             TopicTweet
-        },
-        data() {
-            return {
-                loginStatus: false,  
-                // topicDisplay: this.$store.state.topicdisplay            
-            }
         },
         props: {
             icon:{
@@ -64,9 +54,7 @@ import axios from "axios"
             allTweets() {
                 return this.$store.getters.tweetAllByDate
             },
-            topic(){
-                 return this.$store.getters.hashtagTopic
-            }
+          
         },
         methods: {
             loginCheck() {
@@ -121,19 +109,12 @@ import axios from "axios"
             },
        
         },
-        mounted () {
-            this.loginCheck();
-            this.getFollows();
-            this.getFollowers() 
-            // this.defaultSet();
-            console.log(this.topic)
-        },
     }
 </script>
 
 <style lang="scss" scoped>
 @import url(https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css);
-#homepage{
+#singleTopic{
     z-index: 1;
     width:100vw;
     min-height: 100vh;
@@ -151,10 +132,10 @@ import axios from "axios"
         height: 8vh;
         top: 0vw;
     }
-    #content{
+    #detail-topic{
         z-index: 5;
         // background-color: wheat;
-        min-height: 120vh;;
+        min-height: 84vh;;
     }
     #bottom-bar{
         z-index: 24;
@@ -206,5 +187,4 @@ import axios from "axios"
     background-color: rgba($color: #000000, $alpha: 0.3);
     }
 }
-
 </style>

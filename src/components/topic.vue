@@ -1,7 +1,7 @@
 <template>
     <div id="topic">
-     <h1># TOP 10 topic!</h1>
-     <single-topic v-for="(tweet,index) in tweets" :key="tweet.tweetId" :Tweet="tweet" :num="index"></single-topic>  
+     <h1># TOP topic!</h1>
+     <single-topic v-for="(tweet,index) in tweets" :key="tweet.tag" :Tweet="tweet" :num="index"></single-topic>  
     </div>
 </template>
 
@@ -14,7 +14,7 @@ import SingleTopic from "../components/singleTopic.vue"
         },
         data() {
             return {
-                tweets: this.$store.getters.tweetAllByComments.slice(0,10),
+                tweets: this.$store.getters.hashtagTopic,
            
             }
         },
