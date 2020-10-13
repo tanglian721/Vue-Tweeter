@@ -1,11 +1,11 @@
 <template>
     <div id="bottom-bar">
         <div>
-           <img v-if="this.icon == 'homepage'" src="../assets/home_A.png" alt="">
+           <img v-if="this.$router.history.current.path == '/'" src="../assets/home_A.png" alt="" @click="toall">
            <img v-else src="../assets/home.png" alt="" @click="home">
         </div>
         <div>
-        <img v-if="this.icon == 'userfollow'" src="../assets/userlist_A.png" alt="" >
+        <img v-if="this.$router.history.current.path == '/userfollow'" src="../assets/userlist_A.png" alt="" >
         <img v-else src="../assets/userlist.png" alt="" @click="userFollow">
         </div>
         <div id="at" @click="toCallPage">
@@ -41,6 +41,12 @@
                 this.$store.commit("createShow")
             },
             home(){
+                this.$store.commit("createHide");
+                if ( screen.width > 760 ){
+                    this.$store.commit("infoShow");
+                }else {
+                    this.$store.commit("infoHide");
+                }
                 this.$router.push("/")
             },
             userFollow() {
@@ -62,6 +68,7 @@
             }
 
         },
+     
 
     }
 </script>
@@ -81,7 +88,7 @@
         position: fixed;
         top: 80vh;
         right: 10vw;
-        height: 15vw;
+        height: clamp(40px, 15vw, 80px);
         filter: drop-shadow(2px 2px 5px gray);
     }
     }

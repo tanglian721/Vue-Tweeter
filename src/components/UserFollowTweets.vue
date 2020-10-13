@@ -1,6 +1,7 @@
 <template>
     <div id="userfollowcontent">
-          <div v-if="TrendingDisplay">
+        <img  v-if="loadingImg" id="load" src="../assets/loading.gif" alt="">
+        <div v-if="TrendingDisplay">
         <single-tweet class="tweet" v-for="tweet in tweetsByComments" v-bind:key="tweet.tweetId" :tweet=tweet ></single-tweet>
         </div>
         <div v-else>
@@ -19,6 +20,11 @@ import SingleTweet from "./tweet"
         name: "user-followtweets",
           components:{
             SingleTweet
+        },
+        data() {
+            return {
+                loadingImg: false
+            }
         },
         props:{
             tweet:{
@@ -40,7 +46,11 @@ import SingleTweet from "./tweet"
                   }
                 }).then((response) => {
                   tweet.commentstAmount = response.data.length;
-                  this.$store.commit("pushFollowTweet", tweet)
+                  let Array = this.$store.state.followTweets.map(tweet => tweet.tweetId);
+                  if(Array.includes(tweet.tweetId) == false){
+                  this.$store.commit("pushFollowTweet", tweet);
+                  }
+                  this.loadingImg = false;
                 }).catch((error) => {
                     console.log(error)
                 })
@@ -133,8 +143,28 @@ import SingleTweet from "./tweet"
 }
 .tweet{
     box-sizing: border-box;
-    width: 90%;
-    // background-color: white;
     padding: 2vh;
+}
+#load{
+    margin-top: 30vh;
+    width: 30%;
+}
+@media only screen and (min-width:768px) {
+   .tweet{
+        width: 90%;
+        margin-left: 5%;
+    }
+  
+        
+}
+
+@media only screen and (min-width:1366px) {
+   .tweet{
+        width: 80%;
+        margin-left: 10%;
+    }
+    #load{
+        margin-left: 30%;    
+    }    
 }
 </style>

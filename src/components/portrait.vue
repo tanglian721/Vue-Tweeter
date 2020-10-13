@@ -30,9 +30,21 @@ import cookies from "vue-cookies"
        width: 15vw;
        border-radius: 50%;
        filter: drop-shadow(2px 2px 5px gray);
-       &:focus{
+       &:active{
              filter: none;
        }
        
+   }
+   @media only screen and (min-width:760px){
+       #img{
+       width: 60%;
+      
+       
+   }
+   }
+   @media only screen and (min-width:1366px) {
+         #img{
+           width: 60%;
+         }
    }
 </style>

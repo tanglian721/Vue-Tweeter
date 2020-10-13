@@ -1,26 +1,34 @@
 <template>
     <div id="userFollowPage">
+        <div v-if="loginStatus" id="display">
         <transition name="info">
-             <info-page v-if="info" ></info-page>
+            <info-page v-if="info" ></info-page>
             </transition>
             <transition name="infoBg">
-                <div v-if="info" id="infor-background" @click="infoDisplay"></div>
+                <div class="moblie" v-if="info" id="infor-background" @click="infoDisplay"></div>
             </transition>
             <top-bar></top-bar>
-               <!-- <button @click="alltweetGet">get</button>  -->
             <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
             <create-tweet v-if="createNew"></create-tweet>
             </transition>
-            <user-followtweets></user-followtweets>
-            <bottom-bar icon="userfollow"></bottom-bar>
+            <user-followtweets class="desktop" id="desktop-content"></user-followtweets>
+            <topic-tweet v-if="topicDisplay"></topic-tweet>
+            <user-followtweets v-else></user-followtweets>
+            <bottom-bar icon="userfollow" class="moblie" ></bottom-bar>
+        </div>
+        <div v-else>
+           <router-link to="/signin"></router-link>
+       </div>
     </div>
 </template>
 
 <script>
+import cookies from "vue-cookies"
 import TopBar from "../components/topbar.vue"
 import BottomBar from "../components/bottombar.vue"
 import UserFollowtweets from "../components/UserFollowTweets"
 import InfoPage from "../components/infopage.vue"
+import TopicTweet from "../components/topic.vue"
 import CreateTweet from "../components/createTweet.vue"
     export default {
         name: "user-followpage",
@@ -29,10 +37,13 @@ import CreateTweet from "../components/createTweet.vue"
             BottomBar,
             UserFollowtweets,
             InfoPage,
-            CreateTweet
+            CreateTweet,
+            TopicTweet
+
         },
         data() {
             return {
+                loginStatus: false,  
             }
         },
         props: {
@@ -47,14 +58,45 @@ import CreateTweet from "../components/createTweet.vue"
             },
             createNew(){
                 return this.$store.state.createArea
-            }
-            
+            },
+            topicDisplay() {
+                return this.$store.state.topicdisplay
+            },    
         },
         methods: {
+            loginCheck() {
+                if(cookies.get("loginToken") != undefined){
+                   this.loginStatus = true;
+                   console.log('a')
+                } else{
+                this.$router.push("/signin")
+                console.log('b')
+                }
+            },
+     
             infoDisplay() {
                 this.$store.commit("infoHide")
             },
+            defaultSet() {
+                this.$store.commit("createHide");
+                if ( screen.width < 768 ){
+                    this.$store.commit("topicHide");
+                    this.$store.commit("infoHide");
+                }else if(screen.width < 1366){
+                    this.$store.commit("infoShow");
+                    this.$store.commit("topicHide");
+                } else {
+                    this.$store.commit("topicShow");
+                    this.$store.commit("infoShow");
+                } 
+                console.log(this.topicDisplay)         
+            },
          
+        },
+        mounted () {
+            this.loginCheck();
+            this.defaultSet();
+            
         },
     }
 </script>
@@ -64,9 +106,11 @@ import CreateTweet from "../components/createTweet.vue"
 #userFollowPage{
     z-index: 1;
     width:100vw;
-    min-height: 100vh;
+    height: 100vh;
     background-color:#EFF7F6;
     position: relative;
+    overflow: scroll;
+
     #display{
         z-index: 2;
         position: relative;
@@ -80,9 +124,11 @@ import CreateTweet from "../components/createTweet.vue"
         top: 0vw;
     }
     #userfollowcontent{
-        z-index: 5;
-        // background-color: wheat;
-        min-height: 120vh;;
+         z-index: 5;
+        min-height: 84vh;
+        width: 90%;
+        margin-left: 5%;
+
     }
     #bottom-bar{
         z-index: 24;
@@ -110,6 +156,10 @@ import CreateTweet from "../components/createTweet.vue"
         left: 10%;
         filter: drop-shadow(2px 2px 5px gray);
     }
+    #topic{
+        width: 80%;
+        margin-left: 10%;
+    }
     .info-enter, .info-leave-to{
     transform: translateX(-100%);
     }
@@ -130,4 +180,69 @@ import CreateTweet from "../components/createTweet.vue"
     background-color: rgba($color: #000000, $alpha: 0.3);
     }
 }
+
+@media only screen and (min-width:768px){
+    #userFollowPage{
+  .moblie{
+            display: none;
+        }
+         #info-page{
+             position:fixed;
+             top: 0;
+             width: 20%;
+             height: 100%;
+         }
+         #userfollowcontent{
+             margin-top: 8vh;
+             width: 80%;
+             margin-left: 20%;
+             min-height: 92vh;
+         } 
+        #create-tweet{
+        width: 60%;
+       
+        top: 20vh;
+        left: 30%;
+        }
+         #top-bar{
+         z-index: 20;
+         position: fixed;
+         width: 80%;
+        margin-left: 20%;
+         background-color: #B2F7EF;
+         height: 8vh;
+         top: 0vw;
+        }
+    }
+}
+@media only screen and (min-width:1366px) {
+    #userFollowPage{
+          #info-page{
+             width: 15%;
+         }
+         #top-bar{
+             width: 60%;
+             margin-left: 15%;
+         }
+         #desktop-content{
+             margin-top: 8vh;
+             width: 60%;
+             margin-left: 15%;
+         }
+           #create-tweet{
+        width: 40%;
+        top: 30vh;
+        left: 30%;
+        }
+         #topic{
+             background-color: white;
+             position: fixed;
+             top: 0;
+             height: 100vh;
+             right: 0;
+             width: 25vw;
+         }
+    }
+}
+
 </style>

@@ -1,8 +1,10 @@
 <template>
     <div id="Sign-in-page">
-       <img src="../assets/logo.png">
+       <div id="img">
+        <img src="../assets/logo.png">
+       </div>
        <login-form id="login-form"></login-form>
-        <transition  enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
+       <transition  enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
            <signup-form v-if="signUp" id="sign-up"></signup-form>
         </transition>
 
@@ -41,7 +43,7 @@ import LoginForm from "../components/loginform"
     justify-items: center;
     img{
        position: relative;
-       width: 60vw;
+       width: clamp(200px, 60vw, 300px);
        top: 10vh;
     }
     #login-form{
@@ -58,12 +60,38 @@ import LoginForm from "../components/loginform"
         padding: 5vw;
         background-color: white;
         border-radius: 5vw;
-        width: 70vw;
         display: grid;
         align-items: center;
         justify-items: center;
-        top: 20vh;
+        top: 16vh;
         filter: drop-shadow(10px 10px 15px gray);
+    }
+}
+@media only screen and (min-width:760px) {
+    #login-form{
+       position: relative;
+       top: 20vh;
+       align-items: center;
+       justify-items: center;
+       display: grid;
+    }
+}
+@media only screen and (min-width:1366px) {
+    #Sign-in-page{
+        grid-template-columns: 1fr 1fr;
+        #img{
+            width: 100%;
+            height: 100%;
+            background-color: rgba(163, 217, 219, 0.637);
+        >img{
+            width: 50%;
+            margin-left: 25%;
+            margin-top: 20vh;
+           }
+        }
+        #login-form{
+           top: 0;
+        }
     }
 }
 

@@ -1,6 +1,8 @@
 <template>
-  <div id="userpage">
-    <div id="top">
+  <div>
+    <div v-if="loginStatus">
+     <div  id="userpage">
+     <div id="top">
       <div id="back" @click="backHome">
         <img src="../assets/back.png" alt="" />
       </div>
@@ -31,11 +33,11 @@
  follower : {{ followersNumber }}
       </span>
     </div>
-    <div id="button">
+    <div id="button" class="desktopHide" >
       <span class="display" id="tweetbtn" @click="tweetShow">Tweet</span>
-      <span class="display" id="followingbtn" @click="followingShow">
+      <span class="display desktopHide" id="followingbtn" @click="followingShow">
         Following</span>
-      <span class="display" id="followersbtn" @click="followersShow">
+      <span class="display desktopHide" id="followersbtn" @click="followersShow">
         Followers</span>
     </div>
     <div id="content-display">
@@ -43,19 +45,43 @@
             leave-active-class="animate__animated animate__slideOutRight"> -->
       <single-content 
         v-if="bottomDisplay == 'tweet'" key="content"></single-content>
-      <followers-area 
+      <followers-area class="desktopHide"
         v-else-if="bottomDisplay == 'followers'"  
         v-for="follower in followers" 
         :key="follower.userId" 
         :followerArray="follower"></followers-area>
-      <following-area 
+      <following-area  class="desktopHide"
         v-else-if="bottomDisplay == 'following'"  
         v-for="follow in follows" 
         :key="follow.userId" 
         :followArray="follow" ></following-area>
             <!-- </transition> -->
     </div>
-  <bottom-bar></bottom-bar>
+    <div class="desktopHide">
+
+     <bottom-bar></bottom-bar>
+    </div>
+     </div>
+     <div class="desktop" id="destktop-follow">
+         <div class="followRgiht">
+         <div id="follow-nav">Following</div>
+         <following-area 
+           v-for="follow in follows" 
+        :key="follow.userId" 
+        :followArray="follow" ></following-area>
+         </div>
+         <div class="followRgiht">
+         <div id="follow-nav">Followers</div>
+        <followers-area   
+        v-for="follower in followers" 
+        :key="follower.userId" 
+        :followerArray="follower"></followers-area>
+         </div>
+     </div>
+  </div>
+  <div v-else>
+           <router-link to="/signin"></router-link>
+       </div>
 </div>
 </template>
 
@@ -78,6 +104,7 @@ export default {
         },
     data() {
             return {
+                loginStatus: false,  
                 user: "name",
                 email: "email",
                 birthday: "birthday",
@@ -89,7 +116,6 @@ export default {
                 followers: [],
                 bottomDisplay: "tweet",
                 unfollow: true,
-                Imgpath:"",
             };
         },
     props: {
@@ -103,6 +129,13 @@ export default {
             }
         },
     methods: {
+           loginCheck() {
+                if(cookies.get("loginToken") != undefined){
+                   this.loginStatus = true;
+                } else{
+                this.$router.push("/signin")
+                }
+            },
         backHome() {
           this.$router.push("/");
           location.reload();
@@ -155,7 +188,6 @@ export default {
                   this.email = response.data[0].email;
                   this.birthday = response.data[0].birthdate;
                   this.bio = response.data[0].bio;
-                  this.Imgpath = cookies.get(this.user);
              }).catch((error) => {
                  console.log(error);
              })
@@ -249,9 +281,15 @@ export default {
             },
             userFollow() {
                 return this.$store.state.following;
-            }
+            },Imgpath() { if(cookies.get(this.user)!= undefined){
+                return cookies.get(this.user) 
+             } else {
+                return this.$store.state.portrait[0].path
+             }
+           },
     },
     mounted () {
+          this.loginCheck();
             this.getFollowers();
             this.getUser();
             this.getFollows();         
@@ -264,10 +302,11 @@ export default {
 
 <style lang="scss" scoped>
 // @import url(https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css);
-#userPage{
-    position: relative;
+#userpage{
+    position: fixed;
+    height: 100vh;
     width: 100%;
-    overflow: hidden;
+    overflow: scroll;
 }
     #top{
         width: 100%;
@@ -360,14 +399,159 @@ export default {
     background-color:#B2F7EF ;
     color: white;
 }
-// .content-enter{
-//     transform: translateX(-100%);
-// }
-// .content-leave-to{
-//     transform: translateX(100%)
-// }
-// .content-enter-active, .content-leave-active{
-//     transition: tansform 1s ease-in-out;
-// }
+@media only screen and (min-width:760px){
 
+    #top{
+        width: 100%;
+        height: 15vh;
+        background-color:  #B2F7EF;
+        #back{
+            transform: scale(0.5);
+            position: relative;
+            top: 3vw;
+            left: 3vw;
+        }
+    }
+      #userImg{
+            width: 20vw;
+            top: 10vw;
+            left: 10vw;
+    }
+      #userInfo{
+            margin-left: 40vw;
+            margin-top: 2vh;
+            margin-bottom: 2vh;
+            p{
+              font-size: 1.2rem;
+              span{
+              margin-right: 10vw;
+              }
+             }
+             #bio{
+                  width: 40vw;
+              }
+      }
+    #button{
+        // background-color: yellowgreen;
+        position: relative;
+        border-bottom:1px solid black;
+        text-align: center;
+        .display{
+            position: relative;
+            display: inline-block;
+            border: 1px solid black;
+            width: 18vw;
+            border-bottom:none;
+            padding: 5px;
+            margin-left: 1px;
+            top: 1px;
+            border-radius: 10px 10px 0 0;
+            
+        }
+        #tweetbtn{
+            background-color:#B2F7EF;
+        }
+    }
+    #content-display{
+        height:62vh;
+    }
+
+
+.follow{
+
+       transform: scale(1.2);
+         top: 20vh;
+         right:4vw;
+        }
+#followingBtn{
+    background-color:#B2F7EF ;
+    color: white;
+}
+}
+@media only screen and (min-width:1366px) {
+#userpage{
+    position: fixed;
+    height: 100vh;
+    width: 60%;
+    overflow: scroll;
+}
+#top{
+    width: 100%;
+    height: 15vh;
+    background-color:  #B2F7EF;
+    #back{
+        transform: scale(0.4);
+        position: relative;
+        top: 1vw;
+        left: 1vw;
+    }
+    }
+      #userImg{
+        width: 12vw;
+        top: 6vw;
+        left: 10vw;
+    }
+      #userInfo{
+        margin-left: 30vw;
+        margin-top: 2vh;
+        margin-bottom: 2vh;
+         p{
+              font-size: 1.2rem;
+              span{
+              margin-right: 8vw;
+              }
+             }
+             #bio{
+                  width: 40vw;
+              }
+      }
+    #button{
+        // background-color: yellowgreen;
+        position: relative;
+        border-bottom:1px solid black;
+        text-align: center;
+        .display{
+            position: relative;
+            display: inline-block;
+            border: 1px solid black;
+            width: 18vw;
+            border-bottom:none;
+            padding: 5px;
+            margin-left: 1px;
+            top: 1px;
+            border-radius: 10px 10px 0 0;
+            
+        }
+        #tweetbtn{
+            background-color:#B2F7EF;
+        }
+    }
+    #content-display{
+        height:73vh;
+    }
+.follow{
+
+       transform: scale(1.2);
+         top: 20vh;
+         right:4vw;
+        }
+    #destktop-follow{
+        position: absolute;
+        height: 100vh;
+        width: 40%;
+        right: 0;
+        display: grid;
+        background-color: #7bdff2;
+        grid-template-rows: 1fr 1fr;
+    }
+}
+#follow-nav{
+    height: 5vh;
+    width: 100%;
+    background-color: #0F7E95;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    line-height: 5vh;
+}
 </style>

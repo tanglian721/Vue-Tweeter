@@ -5,7 +5,7 @@
        <img id="userImg" src="../assets/user (2).png">
        <div id="new-tweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag">
        </div>
-       <div id="users" v-if="usersdisplay" @click="hashTagEnd">
+       <div id="users" v-if="usersdisplay">
          <user-array v-for="user in users" :key="user.userId" :userArray="user" @selectuser="setUser"></user-array>
        </div>
        <div v-if="hashtagdisplay"  id="hashTag-area" >
@@ -42,7 +42,6 @@ export default {
                 users:[],
                 usersdisplay:false,
                 hashtagdisplay: false,
-                contentBefore:'sdas',
                 hashText: "#",
             }
         },
@@ -109,6 +108,7 @@ export default {
                 console.log(data);
                 this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='calluser' href='#/user/" + data.userId+ "'><u>@" + data.username + "</u></a> &nbsp";
                 this.usersdisplay = false;
+                console.log(this.textContent)
             },
             hashTag(){
                 this.hashtagdisplay = true;
@@ -149,6 +149,7 @@ export default {
 <style lang="scss" scoped>
 #create-tweet{
     box-sizing: border-box;
+    
     #delete{
         width: 5vw;
         position: relative;
@@ -160,6 +161,7 @@ export default {
         #userImg{
             width: 10vw;
             margin-left: 5%;
+
             position: absolute;
             top: 0;
         }
@@ -187,6 +189,7 @@ export default {
         height:30vh;
         overflow: scroll;
     }
+    
     .message{
         display: grid;
         align-items: center;
@@ -207,6 +210,9 @@ export default {
     }
     #hashTag-area{
         margin-left: 20%;
+        #hashTag-text{
+            font-size: 1.2rem;
+        }
         .hashTags {
             width: 80%;
             border-bottom: 1px solid black;
@@ -215,6 +221,43 @@ export default {
         }
     }
 }
- 
+@media only screen and (min-width:760px){
+    #create-tweet{
+        padding-bottom: 3vh;
+    #text-area{
+        #userImg{
+            width: 5vw;
+        }
+        #new-tweet{
+            width: 70%;
+            font-size: 1.2rem;
+        }
+    }
+    #submit{
+        margin-top: 2vh;
+       transform: scale(1.5);
+    }
+  
+    #hashTag-area{
+        margin-left: 20%;
+        .hashTags {
+            width: 80%;
+            border-bottom: 1px solid black;
+            margin-top: 1vh;
+            color: chocolate;
+        }
+    }
+   
+} 
+}
+@media only screen and (min-width:1336px){
+    #create-tweet{
+        #delete{
+         transform: scale(0.5);
+         margin: 1vh;
+    }
+    }
+
+}
 
 </style>

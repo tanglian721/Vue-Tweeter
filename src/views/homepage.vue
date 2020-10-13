@@ -5,15 +5,16 @@
                <info-page v-if="info" ></info-page>
             </transition>
             <transition name="infoBg">
-                <div v-if="info" id="infor-background" @click="infoDisplay"></div>
+                <div v-if="info" id="infor-background" class="moblie" @click="infoDisplay"></div>
             </transition>
             <top-bar ></top-bar>
             <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
             <create-tweet v-if="createNew"></create-tweet>
             </transition>
+            <page-content class="desktop" id="desktop-content"></page-content>
             <topic-tweet v-if="topicDisplay"></topic-tweet>
             <page-content v-else></page-content>
-            <bottom-bar icon="homepage"></bottom-bar>
+            <bottom-bar icon="homepage" class="moblie" ></bottom-bar>
        </div>
        <div v-else>
            <router-link to="/signin"></router-link>
@@ -43,7 +44,6 @@ import axios from "axios"
         data() {
             return {
                 loginStatus: false,  
-                // topicDisplay: this.$store.state.topicdisplay            
             }
         },
         props: {
@@ -116,8 +116,18 @@ import axios from "axios"
                 })
             },
             defaultSet() {
-                this.$store.commit("infoHide");
                 this.$store.commit("createHide");
+                if ( screen.width < 768 ){
+                    this.$store.commit("topicHide");
+                    this.$store.commit("infoHide");
+                }else if(screen.width < 1366){
+                    this.$store.commit("infoShow");
+                    this.$store.commit("topicHide");
+                } else {
+                    this.$store.commit("topicShow");
+                    this.$store.commit("infoShow");
+                }
+                
             },
        
         },
@@ -125,8 +135,8 @@ import axios from "axios"
             this.loginCheck();
             this.getFollows();
             this.getFollowers() 
-            // this.defaultSet();
-            console.log(this.topic)
+            this.defaultSet();
+            console.log(this.topicDisplay)
         },
     }
 </script>
@@ -136,9 +146,10 @@ import axios from "axios"
 #homepage{
     z-index: 1;
     width:100vw;
-    min-height: 100vh;
+    height: 100vh;
     background-color:#EFF7F6;
     position: relative;
+    overflow: scroll;
     #display{
         z-index: 2;
         position: relative;
@@ -153,8 +164,9 @@ import axios from "axios"
     }
     #content{
         z-index: 5;
-        // background-color: wheat;
-        min-height: 120vh;;
+        min-height: 84vh;
+        width: 90%;
+        margin-left: 5%;
     }
     #bottom-bar{
         z-index: 24;
@@ -204,6 +216,69 @@ import axios from "axios"
     width: 100%;
     height: 100%;
     background-color: rgba($color: #000000, $alpha: 0.3);
+    }
+}
+@media only screen and (min-width:768px){
+    #homepage{
+        .moblie{
+            display: none;
+        }
+         #info-page{
+             position:fixed;
+             top: 0;
+             width: 20%;
+             height: 100%;
+         }
+         #content{
+             margin-top: 8vh;
+             width: 80%;
+             margin-left: 20%;
+             min-height: 92vh;
+         } 
+        #create-tweet{
+        width: 60%;
+       
+        top: 20vh;
+        left: 30%;
+        }
+         #top-bar{
+         z-index: 20;
+         position: fixed;
+         width: 80%;
+        margin-left: 20%;
+         background-color: #B2F7EF;
+         height: 8vh;
+         top: 0vw;
+        }
+    }
+}
+@media only screen and (min-width:1366px) {
+    #homepage{
+          #info-page{
+             width: 15%;
+         }
+         #top-bar{
+             width: 60%;
+             margin-left: 15%;
+         }
+         #desktop-content{
+             margin-top: 8vh;
+             width: 60%;
+             margin-left: 15%;
+         }
+           #create-tweet{
+        width: 40%;
+        top: 30vh;
+        left: 30%;
+        }
+         #topic{
+             background-color: white;
+             position: fixed;
+             top: 0;
+             height: 100vh;
+             right: 0;
+             width: 25vw;
+         }
     }
 }
 

@@ -3,11 +3,15 @@
         <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
         <div v-if="submit === 'on'" id="text-area">
         <img id="userImg" src="../assets/user (2).png">
-        <div id="edittweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers"></div>
+        <div id="edittweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag"></div>
         </div>
          <div id="users" v-if="usersdisplay">
          <user-array v-for="user in users" :key="user.userId" :userArray="user" @selectuser="setUser"></user-array>
        </div>
+        <div v-if="hashtagdisplay"  id="hashTag-area" >
+           <input  @click="hashTagEnd" id="hashTag-text" v-model="hashText" @keydown.enter="hashTagEnd">
+           <p class="hashTags" v-for="hashTag in hashTags" :key="hashTag.tag" @click="tag(hashTag.tag)">#{{ hashTag.tag }}</p>  
+        </div>
         <div class="message" v-else-if="submit === true">
             <h2 >Tweet Editd Sucessful!</h2>
             <span @click="backHome" >Back</span>   
@@ -38,6 +42,8 @@ import UserArray from "../components/@array"
                 users:[],
                 errorInfo:"",
                 usersdisplay:false,
+                hashtagdisplay: false,
+                hashText: "#",
             }
         },
         props:{
@@ -47,11 +53,6 @@ import UserArray from "../components/@array"
             },
         },
         methods: {
-            test() {
-               console.log(this.token)
-               console.log(this.editTweet.tweetId)
-               console.log(this.editTweet.content)
-            },
             tweetEdit(){
                 axios.request({
                     url:"https://tweeterest.ml/api/tweets",
@@ -100,6 +101,22 @@ import UserArray from "../components/@array"
                 this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='calluser' href='#/user/" + data.userId+ "'><u>@" + data.username + "</u></a> &nbsp";
                 this.usersdisplay = false;
             },
+            hashTag(){
+                this.hashtagdisplay = true;
+                setTimeout(() => {
+                    document.getElementById('hashTag-text').focus();
+                }, 200);
+            },
+            hashTagEnd() {
+                
+                 this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='hash' href='#/topic/" + this.hashText.slice(1, this.hashText.length) + "'><u>" + this.hashText+ "</u></a> &nbsp"
+                 this.hashtagdisplay = false;
+            },
+            tag(data) {
+                
+                this.textContent = this.textContent.slice(0, this.textContent.length-1) + "<a class='hash' href='#/topic/" + data + "'><u>#" + data + "</u></a> &nbsp"
+                 this.hashtagdisplay = false;
+            },
             reEdit(){
                 this.submit = "on"
             },
@@ -110,6 +127,9 @@ import UserArray from "../components/@array"
         computed: {
             token() {
                 return cookies.get("loginToken")
+            },
+            hashTags(){
+                 return this.$store.getters.hashtagTopic
             }
         }
     }
@@ -149,6 +169,20 @@ import UserArray from "../components/@array"
         border-radius: 04rem;
         margin-left:70%;
         margin-top: 1vh;
+    }
+    #users{
+        width: 100%;
+        height:30vh;
+        overflow: scroll;
+    }
+     #hashTag-area{
+        margin-left: 20%;
+        .hashTags {
+            width: 80%;
+            border-bottom: 1px solid black;
+            margin-top: 1vh;
+            color: chocolate;
+        }
     }
     .message{
         display: grid;

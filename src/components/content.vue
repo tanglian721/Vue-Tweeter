@@ -44,7 +44,10 @@
                   }
                 }).then((response) => {
                   tweet.commentstAmount = response.data.length;
+                  let Array = this.$store.state.allTweets.map(tweet => tweet.tweetId);
+                  if( Array.includes(tweet.tweetId) == false){
                   this.$store.commit("pushAllTweet", tweet);
+                  }
                   this.loadingImg = false;
                 }).catch((error) => {
                     console.log(error)
@@ -76,7 +79,6 @@
                 })
             },
             forEachTweet(tweetsArray) {
-                console.log(tweetsArray);
                 for(let i = 0; i < tweetsArray.length; i++){
                     this.getLike(tweetsArray[i]);
                 }
@@ -92,7 +94,6 @@
                     "X-Api-Key":"57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
                 }
             }).then((response) => {
-                console.log(response.data);
                 this.forEachTweet(response.data);
             }).catch((error) => {
                 console.log(error)
@@ -129,12 +130,29 @@
 }
 .tweet{
     box-sizing: border-box;
-    width: 90%;
-    // background-color: white;
     padding: 2vh;
 }
 #load{
-    width: 100%;
+    margin-top: 30vh;
+    width: 30%;
+}
+@media only screen and (min-width:768px) {
+   .tweet{
+        width: 90%;
+        margin-left: 5%;
+    }
+  
+        
+}
+
+@media only screen and (min-width:1366px) {
+   .tweet{
+        width: 80%;
+        margin-left: 10%;
+    }
+    #load{
+        margin-left: 30%;    
+    }    
 }
 
 </style>

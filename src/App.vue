@@ -26,4 +26,29 @@ export default {
 .hash{
   color: coral;
 }
+.desktop, .tablet{
+  display: none;
+}
+@media only screen and (min-width:760px){
+  .moblie{
+    display: none;
+  }
+  .tablet{
+    display: block;
+  }
+  .tabletHide{
+    display: none;
+  }
+}
+@media only screen and (min-width:1366px) {
+  .desktop{
+   display: block;
+}
+.tabletHide{
+    display: inline-block;
+  }
+ .desktopHide{
+   display: none;
+ }
+}
 </style>

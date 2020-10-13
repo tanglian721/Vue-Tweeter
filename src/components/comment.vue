@@ -229,7 +229,6 @@
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 7fr;
-        justify-items: center;
         >img{
             width: 8vw;
         }
@@ -299,6 +298,42 @@
         }
         }
         .img{
-    border-radius: 50%;
+             justify-self: center;
+             border-radius: 50%;
+}
+@media only screen and (min-width:768px){
+    #comment-area{
+         .img{
+             width:5vw;
+         }
+          #editComment{
+            font-size: 1.2rem;
+          }
+         #comment-like{
+         h5{
+            img{
+                width: 2.5vw;
+            }
+        }
+         }
+     }
+}
+@media only screen and (min-width:1366px) {
+     #comment-area{
+         .img{
+             width:3vw;
+         }
+          #editComment{
+            font-size: 1.2rem;
+          }
+         #comment-like{
+         h5{
+             margin-right: 2vw;
+            img{
+                width: 1.5vw;
+            }
+        }
+         }
+     }
 }
 </style>

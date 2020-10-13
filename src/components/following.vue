@@ -152,6 +152,6 @@ import cookies from "vue-cookies"
         }
 #followingBtn{
     background-color:white ;
-    color:#B2F7EF ;
+    color:black ;
 }
 </style>

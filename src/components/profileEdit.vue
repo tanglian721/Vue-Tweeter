@@ -144,11 +144,75 @@ import signUpApi from "axios"
             margin-left:10vw;
             top: 4vh;
             filter: drop-shadow(2px 2px 5px gray);
+            &:active{
+             filter: none;
+            }
         }
         #portrait-set{
             width: 70vw;
 
         }
     }
-
+@media only screen and (min-width:760px){
+     #profile-show{
+        #userImg{
+            left: 15vw;
+        }
+        #editBtn{
+            transform: scale(1.5);
+            top: 3vh;
+            right:10vw;
+        }
+        #userInfo{
+            top: -8vh;
+            left: 30vw;
+            p{
+              transform: scale(1.2);
+            }
+        }
+        #submit{
+       
+            transform: scale(1.2);
+            margin-left:25vw;
+            top: 2vh;
+        }
+        #portrait-set{
+            position: relative;
+            left: -12vw;
+        }
+      
+    }
+}
+@media only screen and (min-width:1366px) {
+     #profile-show{
+        #userImg{
+            left: 15vw;
+            width: 10vw;
+            top: -5vw;
+        }
+        #editBtn{
+            transform: scale(1.5);
+            top: 3vh;
+            right:10vw;
+        }
+        #userInfo{
+            top: 0;
+            left: 30vw;
+            p{
+              transform: scale(1.2);
+            }
+        }
+        #submit{
+            transform: scale(3);
+            top: -20vh;
+        }
+        #portrait-set{
+            position: relative;
+            width: 30vw;
+            left: 20vw;
+            top: -30vh;
+        }
+      
+    }
+}
 </style>

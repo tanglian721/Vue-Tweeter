@@ -44,8 +44,6 @@ import cookies from "vue-cookies"
             }
         },
         mounted () {
-            console.log("11")
-            console.log(this.TrendingDisplay);
         },
     }
 </script>

@@ -1,11 +1,11 @@
 <template>
-        <div>
+        <div @keypress.enter="loginUser">
         <p>Email</p>
         <input type="text" id="email-input" v-model="email">
         <p>Password</p>
-        <input type="text" id="password-input" v-model="password">
+        <input type="password" id="password-input" v-model="password">
         <div id="buttons">
-        <img src="../assets/enter.png" @click="loginUser">  
+        <img src="../assets/enter.png" @click="loginUser" >  
         <img src="../assets/signUp.png" @click="signUpForm">
         </div>
         <h3>{{ loginStatus }}</h3>
@@ -65,13 +65,28 @@ import cookies from "vue-cookies"
 
 <style lang="scss" scoped>
 img{
-    width: 10vw;
+    width: clamp(30px,10vw, 50px);
 }
 #buttons{
-    margin-top: 2vh;
+    margin-top: 3vh;
     width: 50vw;
     display: flex;
     justify-content: space-evenly;
+}
+
+@media only screen and (min-width:768px) {
+    input{
+        font-size: 1.5rem;
+        height: 2rem;
+        width: clamp(180px, 15vw , 250px);
+    }
+    p{
+        font-size: 1.5rem;
+        margin: 1vh 0 ;
+    }
+    #buttons{
+        width: clamp(180px, 15vw , 250px);
+    }
 }
 
 </style>

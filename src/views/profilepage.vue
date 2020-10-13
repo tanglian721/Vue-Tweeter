@@ -46,6 +46,23 @@ import ProfileEdit from "../components/profileEdit"
             }
         }
     }
+    @media only screen and (min-width:760px){
+    #top{
+        #back{
+            top: 2vw;
+            left: 2vw;
+            width: 4vw;
+            height: 4vw;
+            img{
+                width: 2vw;
+                margin: 1vw;
+            }
+        }
+    }
+}
+@media only screen and (min-width:1366px) {
+
+}
  
 
 </style>

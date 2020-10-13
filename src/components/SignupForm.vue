@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h3>SIGN UP</h3>
         <p>Email</p>
        <input type="text" id="email" v-model="email">
         <p>Username</p>
@@ -61,7 +62,9 @@ import cookies from "vue-cookies"
 </script>
 
 <style lang="scss" scoped>
-
+h3{
+    margin-bottom: 2vh;
+}
 input,textarea{
     width: 80%;
 }
@@ -72,6 +75,15 @@ input,textarea{
     border-radius: 10px;
     color: white;
     filter: drop-shadow(2px 2px 5px gray);
+}
+@media only screen and (min-width:768px) {
+    input{
+        height: 1rem;
+        width: 250px;
+    }
+    textarea{
+        width: 255px;
+    }
 }
 
 

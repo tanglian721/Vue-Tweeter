@@ -25,6 +25,7 @@ export default new Vuex.Store({
         topicdisplay: false,
         hashTopic: [],
         hashTopicWithAmount: [],
+        topicTag: '',
         portrait: [{
                 id: 0,
                 path: "https://lh3.googleusercontent.com/ae_hkmR-pHPKzKEPAASoX43w1nDjYnXkEl0wspuSLnXa6c0uvvDWHDiqae_bO45KVK1l1AlYgv3wuSVRSbjZ326R9su31EIeX_TvjlJXxYfRTW3t47Mo-YiyvYoLUYIgt9IlQseD-8y9bgBmCccg_iCjpgWLwANjWFcCJbB_Iaust1CC6nyxjaYIvzDpMzRTAB9TptWdYJ8OxjBNG1vjsA4H0fN_tLNLTrjiFM2SAaljclEQX3LUsk7onpRORCZ-SEkgNJT-pGP3UWj7-kkJFvpCL2rcwdudu4E8Le906O2Jo7-o6NcamsetD7t_zu8aPWcrxWR-gxAwsU161wgk-Qju2GGHqxHL-A1MmC8MfD3zGj0Gyij_vt72Wc2gV-4tCG98n7A6VKIIyGbR5bw_X14HFoomlouVar69glAuAZacN75p5TQyA_5TVN7gXAVaNWr_sNNgLJRyUsCGUubIZsdDxXW3fHul7FCaKmZ8VyU_BTTi7mfBJZFyN6z173xvd_-mOz7S24rhwSGH_AvCch-4SuqrlHbU2gKHuaOqOp0hPZSrjxjlkA8qcL2gMTypOXtcgVgorayltYg3D3kPwzhDcNpN1do-GWj1-Ka1qt0V_vQkFxBMYWPoCzjBC0UEuuLAVS1Yjeio3gpyW1HJdL_-W_hi83F-EjXESlR2UrN_nSSgqdAxxj5En7s=w459-h435-no?authuser=1"
@@ -130,6 +131,7 @@ export default new Vuex.Store({
         },
         clearAllTweet(state) {
             state.allTweets = [];
+            console.log(state.allTweets)
             state.calledTweet = [];
         },
         clearFollowTweet(state) {
@@ -141,6 +143,10 @@ export default new Vuex.Store({
         pushFollowTweet(state, tweet) {
             state.followTweets.push(tweet);
         },
+        detailTopic(state, data) {
+            state.topicTag = data;
+
+        }
 
 
     },
@@ -243,9 +249,7 @@ export default new Vuex.Store({
         },
         hashtagTopic(state) {
             state.hashTopic = [];
-            console.log("start")
             for (let index = 0; index < state.allTweets.length; index++) {
-                console.log("tag")
                 if (state.allTweets[index].content.includes("hash") == true) {
                     let contents = state.allTweets[index].content;
                     let start = "><u>#";
@@ -261,11 +265,9 @@ export default new Vuex.Store({
                             tagAmount++;
                         }
                     }
-                    console.log(tagAmount)
                     newhash.amount = tagAmount;
-                    console.log(newhash);
                     let tagArray = state.hashTopic.map(tag => tag.tag)
-                    if (tagArray.includes(newhash.tag) == false) {
+                    if (tagArray.includes(newhash.tag) == false && newhash.tag != "") {
                         state.hashTopic.push(newhash);
                     }
                 }
@@ -283,7 +285,6 @@ export default new Vuex.Store({
                 return comparision
             }
             let sortArray = state.hashTopic.sort(compare);
-            console.log(sortArray)
             return sortArray
         },
     }

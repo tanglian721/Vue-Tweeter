@@ -5,7 +5,7 @@
             <div id="text-area">
                 <div id="name-date">
                     <h3 id="name" @click="toUserPage">{{ tweet.username }}</h3> 
-                    <h6 id="date">{{ tweet.createdAt }}</h6>
+                    <h6 id="date">{{ tweet.createdAt.slice(0,16) }}</h6>
                 </div>
 
                 <p id="tweet-text" v-html="content.firstChild.innerHTML"></p>
@@ -52,7 +52,9 @@
                 </transition>
                 <div v-if="commentDisplay" id="comment-area" >
                     <div id="comment-splitter"></div>
-                     <tweet-comment  v-for="comment in comments" :key="comment.commentID" :comment=comment></tweet-comment>
+                    <tweet-comment  v-for="comment in comments" :key="comment.commentID" :comment=comment></tweet-comment>
+                    <create-comment :tweetId="this.tweet.tweetId"></create-comment>
+
                 </div>
             </div>
         </div>
@@ -63,6 +65,7 @@
 <script>
     import TweetComment from "./comment.vue"
     import EditTweet from "./editTweet.vue"
+    import CreateComment from "./creatComment.vue"
     import axios from "axios"
     import cookies from "vue-cookies"
 
@@ -70,7 +73,8 @@
         name:"single-tweet",
         components:{
             TweetComment,
-            EditTweet
+            EditTweet,
+            CreateComment
         },
         data() {
             return {
@@ -99,7 +103,8 @@
             comment:{
                 type:Object,
                 requried:true
-            }
+            },
+            tweetId: Number
         },
         methods: {
             open(data) {
@@ -268,13 +273,13 @@
            }
            h6{
                z-index: 6;
-               margin-left: 60%;
+               right: 0;
            }
     }
     #tweet-text{
+        width: 80%;
         margin-top: 2vh;
-        #haha{
-          color: blue;
+     
    }
     }
     #comment-like{
@@ -337,15 +342,163 @@
         }
    
 
-}
+
 .img{
     border-radius: 50%;
 }
-    // #splitter{
-    //     margin-top: 2vh;
-    //     height: 1px;
-    //     width: 100%;
-    //     background-color:rgba($color: #000000, $alpha: 0.2);
-    // }
+@media only screen and (min-width:768px) {
+    #tweet-content{
+      margin-top: 2vh;
+       grid-template-columns: 1fr 6fr;
+        >img{
+         width: 6vw;
+        }
+       #name-date{
+        z-index: 6;
+           h3{
+               font-size: 1.4rem;
+           }
+           h6{
+               font-size: 1rem;
+           }
+         }
+        #tweet-text{
+          font-size: 1.2rem;
+          margin-top:3vh;
+        }
+       #comment-like{
+        display: flex;
+        margin-top: 2vh;
+        h5{
+            display: inline-block;
+            margin-right: 2vw;
+            img{
+                width: 3vw;
+            }
+        }
+    }
+    }
+    #edit-tweet{
+        width: 80%;
+        min-height: 30vh;
+        border-radius: 30px;
+        background-color: white;
+        position: fixed;
+        top: 30vh;
+        left: 10%;
+        filter: drop-shadow(2px 2px 5px gray);
+    }
+    #deleteDiv{
+        width: 80%;
+        border-radius: 30px;
+        background-color: white;
+        position: fixed;
+        top: 30vh;
+        left: 10%;
+        filter: drop-shadow(2px 2px 5px gray);
+    }
+        .message{
+        height: 18vh;
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        width: 80%;
+        margin-left:10%;
+        
+        h2{
+            text-align: center;
+        }
+        span{
+            height: 2vh;
+            padding: 2vw;
+            line-height: 2vh;
+            background-color: #f2b5d4;
+            border-radius: 04rem;
+            font-size: 1rem;
+            color: white; 
+        }
+        #back{
+            background-color: #B2F7EF;
+        }
+        }
+   }
+@media only screen and (min-width:1366px) {
+    #tweet-content{
+      margin-top: 2vh;
+       grid-template-columns: 1fr 7fr;
+        >img{
+         width: 4vw;
+        }
+       #name-date{
+        z-index: 6;
+           h3{
+               font-size: 1.4rem;
+           }
+           h6{
+               margin-left: 70%;
+               font-size: 1rem;
+           }
+         }
+        #tweet-text{
+          font-size: 1.2rem;
+        }
+       #comment-like{
+        display: flex;
+        margin-top: 2vh;
+        h5{
+            display: inline-block;
+            margin-right: 2vw;
+            img{
+                width: 1.5vw;
+            }
+        }
+    }
+    }
+    #edit-tweet{
+        width: 80%;
+        min-height: 30vh;
+        border-radius: 30px;
+        background-color: white;
+        position: fixed;
+        top: 30vh;
+        left: 10%;
+        filter: drop-shadow(2px 2px 5px gray);
+    }
+    #deleteDiv{
+        width: 80%;
+        border-radius: 30px;
+        background-color: white;
+        position: fixed;
+        top: 30vh;
+        left: 10%;
+        filter: drop-shadow(2px 2px 5px gray);
+    }
+        .message{
+        height: 18vh;
+        display: grid;
+        align-items: center;
+        justify-items: center;
+        width: 80%;
+        margin-left:10%;
+        
+        h2{
+            text-align: center;
+        }
+        span{
+            height: 2vh;
+            padding: 2vw;
+            line-height: 2vh;
+            background-color: #f2b5d4;
+            border-radius: 04rem;
+            font-size: 1rem;
+            color: white; 
+        }
+        #back{
+            background-color: #B2F7EF;
+        }
+        }
+   }
+
+
 
 </style>
