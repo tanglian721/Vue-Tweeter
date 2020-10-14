@@ -4,7 +4,6 @@ import LandingPage from "../views/homepage.vue"
 import SigninPage from "../views/SigninPage.vue"
 import ProfilePage from "../views/profilepage.vue"
 import UserPage from "../views/userpage.vue"
-import OnetweetPage from "../views/oneTweetpage.vue"
 import UserFollowpage from "../views/userfollowpage.vue"
 import CalledTweetpage from "../views/calledTweetpage.vue"
 import SingleTopic from "../views/SingleTopicpage.vue"
@@ -35,11 +34,6 @@ const routes = [{
         path: "/topic/*",
         name: "single-topic",
         component: SingleTopic
-    },
-    {
-        path: "/tweet",
-        name: "onetweet-page",
-        component: OnetweetPage
     },
     {
         path: "/userfollow",

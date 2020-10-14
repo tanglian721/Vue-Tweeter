@@ -1,9 +1,6 @@
 import Vue from "vue";
+import cookies from "vue-cookies";
 import Vuex from "vuex";
-import cookies from "vue-cookies"
-
-// import axios from "axios"
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -12,16 +9,13 @@ export default new Vuex.Store({
         infoForm: false,
         createArea: false,
         oneUserTweet: [],
-        homePageTweets: [],
         allTweets: [],
         followTweets: [],
         TrendingDisplay: false,
         tweetId: "",
-        singleTweet: "",
         following: [],
         follower: [],
         calledTweet: [],
-        topicArray: [],
         topicdisplay: false,
         hashTopic: [],
         hashTopicWithAmount: [],
@@ -134,7 +128,6 @@ export default new Vuex.Store({
         },
         clearAllTweet(state) {
             state.allTweets = [];
-            console.log(state.allTweets)
             state.calledTweet = [];
         },
         clearFollowTweet(state) {
@@ -183,21 +176,21 @@ export default new Vuex.Store({
             }
             return state.allTweets.sort(compare);
         },
-        tweetAllByComments: function(state) {
-            function compare(a, b) {
-                let tweetA = a.commentstAmount;
-                let tweetB = b.commentstAmount;
-                let comparision = 0;
-                if (tweetA < tweetB) {
-                    comparision = 1;
-                } else if (tweetA > tweetB) {
-                    comparision = -1;
-                }
-                return comparision
-            }
-            state.topicArray = state.allTweets.sort(compare)
-            return state.topicArray;
-        },
+        // tweetAllByComments: function(state) {
+        //     function compare(a, b) {
+        //         let tweetA = a.commentstAmount;
+        //         let tweetB = b.commentstAmount;
+        //         let comparision = 0;
+        //         if (tweetA < tweetB) {
+        //             comparision = 1;
+        //         } else if (tweetA > tweetB) {
+        //             comparision = -1;
+        //         }
+        //         return comparision
+        //     }
+        //     state.topicArray = state.allTweets.sort(compare)
+        //     return state.topicArray;
+        // },
         userFollowTweetByDate: function(state) {
             function compare(a, b) {
                 let tweetA = a.createdAt;
@@ -226,20 +219,20 @@ export default new Vuex.Store({
             }
             return state.followTweets.sort(compare);
         },
-        userFollowTweetAllBylikes: function(state) {
-            function compare(a, b) {
-                let tweetA = a.likeAmount;
-                let tweetB = b.likeAmount;
-                let comparision = 0;
-                if (tweetA < tweetB) {
-                    comparision = 1;
-                } else if (tweetA > tweetB) {
-                    comparision = -1;
-                }
-                return comparision
-            }
-            return state.followTweets.sort(compare);
-        },
+        // userFollowTweetAllBylikes: function(state) {
+        //     function compare(a, b) {
+        //         let tweetA = a.likeAmount;
+        //         let tweetB = b.likeAmount;
+        //         let comparision = 0;
+        //         if (tweetA < tweetB) {
+        //             comparision = 1;
+        //         } else if (tweetA > tweetB) {
+        //             comparision = -1;
+        //         }
+        //         return comparision
+        //     }
+        //     return state.followTweets.sort(compare);
+        // },
         noticeTweet(state) {
             let user = "@" + cookies.get("logininfo").username;
             for (let i = 0; i < state.allTweets.length; i++) {
