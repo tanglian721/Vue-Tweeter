@@ -492,7 +492,7 @@ export default {
         left: 10vw;
     }
       #userInfo{
-        margin-left: 30vw;
+        margin-left: 25vw;
         margin-top: 2vh;
         margin-bottom: 2vh;
          p{
@@ -532,8 +532,8 @@ export default {
 .follow{
 
        transform: scale(1.2);
-         top: 20vh;
-         right:4vw;
+         top: 16.5vh;
+         right:3vw;
         }
     #destktop-follow{
         position: absolute;
@@ -543,6 +543,11 @@ export default {
         display: grid;
         background-color: #7bdff2;
         grid-template-rows: 1fr 1fr;
+        .followRgiht{
+            height: 100%;
+            overflow:scroll;
+        }
+        
     }
 }
 #follow-nav{

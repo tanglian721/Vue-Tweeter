@@ -28,7 +28,7 @@ export default new Vuex.Store({
         topicTag: '',
         portrait: [{
                 id: 0,
-                path: "https://lh3.googleusercontent.com/ae_hkmR-pHPKzKEPAASoX43w1nDjYnXkEl0wspuSLnXa6c0uvvDWHDiqae_bO45KVK1l1AlYgv3wuSVRSbjZ326R9su31EIeX_TvjlJXxYfRTW3t47Mo-YiyvYoLUYIgt9IlQseD-8y9bgBmCccg_iCjpgWLwANjWFcCJbB_Iaust1CC6nyxjaYIvzDpMzRTAB9TptWdYJ8OxjBNG1vjsA4H0fN_tLNLTrjiFM2SAaljclEQX3LUsk7onpRORCZ-SEkgNJT-pGP3UWj7-kkJFvpCL2rcwdudu4E8Le906O2Jo7-o6NcamsetD7t_zu8aPWcrxWR-gxAwsU161wgk-Qju2GGHqxHL-A1MmC8MfD3zGj0Gyij_vt72Wc2gV-4tCG98n7A6VKIIyGbR5bw_X14HFoomlouVar69glAuAZacN75p5TQyA_5TVN7gXAVaNWr_sNNgLJRyUsCGUubIZsdDxXW3fHul7FCaKmZ8VyU_BTTi7mfBJZFyN6z173xvd_-mOz7S24rhwSGH_AvCch-4SuqrlHbU2gKHuaOqOp0hPZSrjxjlkA8qcL2gMTypOXtcgVgorayltYg3D3kPwzhDcNpN1do-GWj1-Ka1qt0V_vQkFxBMYWPoCzjBC0UEuuLAVS1Yjeio3gpyW1HJdL_-W_hi83F-EjXESlR2UrN_nSSgqdAxxj5En7s=w459-h435-no?authuser=1"
+                path: "https://images.vexels.com/media/users/3/136558/isolated/lists/43cc80b4c098e43a988c535eaba42c53-person-user-icon.png"
             }, {
                 id: 1,
                 path: "https://pbs.twimg.com/profile_images/1278183948279922690/ybnDHXn7_400x400.jpg"
@@ -49,7 +49,7 @@ export default new Vuex.Store({
             },
             {
                 id: 6,
-                path: "https://lh3.googleusercontent.com/proxy/4W_uFZCVbKx-PvpXbigIWZOWQH9x2xPh-w2OzdW4EZqUlNHLwJvgV9n2HW3HTs0oS_aQF9-vhsMY4z-0PXmFS_trxbQ1oTEt5gRrVY8tyf8N9WwvudV6PY0AK3e__Si3pkWovPhP-ZUiI4de1K8dymMSLjcNgEgQ7ewKMlAZAkcK0XHwSNFmzp5kprsPfQIlb-ZPe20"
+                path: "https://images.vexels.com/media/users/3/136558/isolated/lists/43cc80b4c098e43a988c535eaba42c53-person-user-icon.png"
             },
             {
                 id: 7,
@@ -92,6 +92,9 @@ export default new Vuex.Store({
     mutations: {
         signUpDisplay: function(state) {
             state.signUpForm = !state.signUpForm;
+        },
+        signUpHide: function(state) {
+            state.signUpForm = false;
         },
         infoShow: function(state) {
             state.infoForm = true;
@@ -145,7 +148,6 @@ export default new Vuex.Store({
         },
         detailTopic(state, data) {
             state.topicTag = data;
-
         }
 
 

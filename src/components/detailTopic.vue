@@ -51,6 +51,10 @@ import SingleTweet from "./tweet"
                 }
                 console.log(this.hashTweets)
                   this.loadingImg = false;
+                console.log(screen.width)
+                  if(screen.width < "1366"){
+                this.$store.commit("topicHide");
+                  }
             }
         },
         mounted () {
@@ -68,7 +72,7 @@ import SingleTweet from "./tweet"
 
 }
 h1{
-    padding-top: 5vh;
+    padding-top: 5vhnpm;
     text-align: center;
     color: coral;
     text-transform: uppercase;

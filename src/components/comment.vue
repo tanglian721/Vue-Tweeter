@@ -149,7 +149,8 @@
                     console.log()
                     setTimeout(() => {
                         this.deleteDisplay = false;
-                    }, 1000);
+                         location.reload();
+                    }, 1000);                   
                 }).catch((errorMessage) => {
                     console.log(errorMessage)
                      this.deleteStatus = false 

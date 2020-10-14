@@ -27,7 +27,7 @@ import cookies from "vue-cookies"
 
 <style lang="scss" scoped>
    #img{
-       width: 15vw;
+       width: 60%;
        border-radius: 50%;
        filter: drop-shadow(2px 2px 5px gray);
        &:active{
@@ -37,7 +37,7 @@ import cookies from "vue-cookies"
    }
    @media only screen and (min-width:760px){
        #img{
-       width: 60%;
+       width: 40%;
       
        
    }

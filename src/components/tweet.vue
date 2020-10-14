@@ -7,7 +7,6 @@
                     <h3 id="name" @click="toUserPage">{{ tweet.username }}</h3> 
                     <h6 id="date">{{ tweet.createdAt.slice(0,16) }}</h6>
                 </div>
-
                 <p id="tweet-text" v-html="content.firstChild.innerHTML"></p>
                 <div id="comment-like">
                     <h5 id="comment">
@@ -31,6 +30,7 @@
                        <img v-if="tweet.username == user.username" id="delete" src="../assets/delete (1).png" @click="deleteShow">
                     </h5>
                 </div>
+                <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
                 <div id="deleteDiv" v-if="deleteDisplay">
                     <div v-if="deleteStatus == 'on'" class="message">
                      <h2 >Are you sure to delete this tweet?</h2>
@@ -47,15 +47,18 @@
                      <span @click="deleteTweet" >DELETE AGAIN</span>   
                     </div>
                 </div>
+                </transition>
                  <transition enter-active-class="animate__animated animate__bounceInDown" leave-active-class="animate__animated animate__bounceOutUp">
                     <edit-tweet v-if="editDisplay" :editTweet="tweet" @display="editHide"></edit-tweet>
                 </transition>
+               
                 <div v-if="commentDisplay" id="comment-area" >
                     <div id="comment-splitter"></div>
                     <tweet-comment  v-for="comment in comments" :key="comment.commentID" :comment=comment></tweet-comment>
                     <create-comment :tweetId="this.tweet.tweetId"></create-comment>
-
                 </div>
+              
+                 
             </div>
         </div>
         <div id="splitter"></div>
@@ -259,7 +262,7 @@
 <style lang="scss" scoped>
 @import url(https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css);
 #tweet-content{
-    margin-top: 2vh;
+    margin-top: 1vh;
     display: grid;
     grid-template-columns: 1fr 5fr;
     >img{
@@ -273,7 +276,8 @@
            }
            h6{
                z-index: 6;
-               right: 0;
+               margin-left: 70%;
+
            }
     }
     #tweet-text{
@@ -325,7 +329,7 @@
         }
         span{
             height: 2vh;
-            padding: 2vw;
+            padding: 1vh;
             line-height: 2vh;
             background-color: #f2b5d4;
             border-radius: 04rem;
@@ -340,15 +344,13 @@
 .calluser{
             color: red;
         }
-   
-
 
 .img{
     border-radius: 50%;
 }
 @media only screen and (min-width:768px) {
     #tweet-content{
-      margin-top: 2vh;
+      margin-top: 1vh;
        grid-template-columns: 1fr 6fr;
         >img{
          width: 6vw;
@@ -379,48 +381,14 @@
     }
     }
     #edit-tweet{
-        width: 80%;
-        min-height: 30vh;
-        border-radius: 30px;
-        background-color: white;
-        position: fixed;
-        top: 30vh;
-        left: 10%;
-        filter: drop-shadow(2px 2px 5px gray);
+        width: 60%;
+        left: 30%;
     }
     #deleteDiv{
-        width: 80%;
-        border-radius: 30px;
-        background-color: white;
-        position: fixed;
-        top: 30vh;
-        left: 10%;
-        filter: drop-shadow(2px 2px 5px gray);
+        width: 50%;
+        left: 30%;
     }
-        .message{
-        height: 18vh;
-        display: grid;
-        align-items: center;
-        justify-items: center;
-        width: 80%;
-        margin-left:10%;
-        
-        h2{
-            text-align: center;
-        }
-        span{
-            height: 2vh;
-            padding: 2vw;
-            line-height: 2vh;
-            background-color: #f2b5d4;
-            border-radius: 04rem;
-            font-size: 1rem;
-            color: white; 
-        }
-        #back{
-            background-color: #B2F7EF;
-        }
-        }
+ 
    }
 @media only screen and (min-width:1366px) {
     #tweet-content{
@@ -454,49 +422,57 @@
         }
     }
     }
-    #edit-tweet{
-        width: 80%;
-        min-height: 30vh;
-        border-radius: 30px;
-        background-color: white;
-        position: fixed;
-        top: 30vh;
-        left: 10%;
-        filter: drop-shadow(2px 2px 5px gray);
+       #edit-tweet{
+        width: 40%;
+        left: 25%;
     }
     #deleteDiv{
-        width: 80%;
-        border-radius: 30px;
-        background-color: white;
-        position: fixed;
-        top: 30vh;
-        left: 10%;
-        filter: drop-shadow(2px 2px 5px gray);
+        width: 30%;
+        left: 30%;
     }
-        .message{
-        height: 18vh;
-        display: grid;
-        align-items: center;
-        justify-items: center;
-        width: 80%;
-        margin-left:10%;
+    // #edit-tweet{
+    //     width: 80%;
+    //     min-height: 30vh;
+    //     border-radius: 30px;
+    //     background-color: white;
+    //     position: fixed;
+    //     top: 30vh;
+    //     left: 10%;
+    //     filter: drop-shadow(2px 2px 5px gray);
+    // }
+    // #deleteDiv{
+    //     width: 80%;
+    //     border-radius: 30px;
+    //     background-color: white;
+    //     position: fixed;
+    //     top: 30vh;
+    //     left: 10%;
+    //     filter: drop-shadow(2px 2px 5px gray);
+    // }
+    //     .message{
+    //     height: 18vh;
+    //     display: grid;
+    //     align-items: center;
+    //     justify-items: center;
+    //     width: 80%;
+    //     margin-left:10%;
         
-        h2{
-            text-align: center;
-        }
-        span{
-            height: 2vh;
-            padding: 2vw;
-            line-height: 2vh;
-            background-color: #f2b5d4;
-            border-radius: 04rem;
-            font-size: 1rem;
-            color: white; 
-        }
-        #back{
-            background-color: #B2F7EF;
-        }
-        }
+    //     h2{
+    //         text-align: center;
+    //     }
+    //     span{
+    //         height: 2vh;
+    //         padding: 2vw;
+    //         line-height: 2vh;
+    //         background-color: #f2b5d4;
+    //         border-radius: 04rem;
+    //         font-size: 1rem;
+    //         color: white; 
+    //     }
+    //     #back{
+    //         background-color: #B2F7EF;
+    //     }
+    //     }
    }
 
 

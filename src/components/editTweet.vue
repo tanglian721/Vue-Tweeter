@@ -2,7 +2,7 @@
     <div id="edit-tweet">
         <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
         <div v-if="submit === 'on'" id="text-area">
-        <img id="userImg" src="../assets/user (2).png">
+        <img id="userImg" :src= Imgpath>
         <div id="edittweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag"></div>
         </div>
          <div id="users" v-if="usersdisplay">
@@ -130,7 +130,13 @@ import UserArray from "../components/@array"
             },
             hashTags(){
                  return this.$store.getters.hashtagTopic
+            },
+            Imgpath() { if(cookies.get(cookies.get("logininfo").username)!= undefined){
+                return cookies.get(cookies.get("logininfo").username) 
+            } else {
+                return this.$store.state.portrait[0].path
             }
+            },
         }
     }
 </script>
@@ -149,6 +155,7 @@ import UserArray from "../components/@array"
         #userImg{
             width: 10vw;
             margin-left: 5%;
+            border-radius: 50%;
             position: absolute;
             top: 0;
         }
@@ -203,6 +210,44 @@ import UserArray from "../components/@array"
         }
     }
 }
+ @media only screen and (min-width:760px){
+  #edit-tweet{
+        padding-bottom: 3vh;
+    #text-area{
+        #userImg{
+            width: 5vw;
+        }
+        #edittweet{
+            width: 70%;
+            font-size: 1.2rem;
+        }
+    }
+    #submit{
+        margin-top: 2vh;
+       transform: scale(1.5);
+    }
+  
+    #hashTag-area{
+        margin-left: 20%;
+        .hashTags {
+            width: 80%;
+            border-bottom: 1px solid black;
+            margin-top: 1vh;
+            color: chocolate;
+        }
+    }
+   
+} 
+}
+@media only screen and (min-width:1336px){
+    #edit-tweet{
+        #delete{
+         transform: scale(0.5);
+         margin: 1vh;
+    }
+    }
+
+} 
  
 
 </style>

@@ -32,7 +32,10 @@ import cookies from "vue-cookies"
         },
         methods: {
             toUserPage() {
-                console.log(this.followArray.userId);               
+                console.log(this.followArray.userId);
+                this.$router.push("/user/" + this.followArray.userId)
+
+                location.reload();         
             },
             followBtbCheck(){
                 console.log(this.userDisplayId);

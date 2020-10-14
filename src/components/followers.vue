@@ -1,5 +1,5 @@
 <template>
-    <div class="followers">
+    <div class="followers" @click="toUserPage">
       <img :src= Imgpath  alt="">
        <div class="info">
          <h3>{{ followerArray.username }}</h3>
@@ -15,7 +15,6 @@
         name: "followers-area",
         props:{
             followerArray:{
-
                 type:Object,
                 required:true
             }    
@@ -27,6 +26,14 @@
                 return this.$store.state.portrait[0].path
             }
            }
+        },
+        methods: {
+            toUserPage() {
+                console.log(this.followerArray);
+                this.$router.push("/user/" + this.followerArray.id)
+
+                location.reload();         
+            },
         },
     
     }

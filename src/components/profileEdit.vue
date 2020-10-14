@@ -14,14 +14,14 @@
                 <span v-else>{{  email  }}</span>
                 </p>
             <p id="birthday">
-                 Birthday:
-                <input v-if="edit" type="text" v-model="birthday">
-                <span v-else>{{  birthday  }}</span>
+                 birthdate:
+                <input v-if="edit" type="text" v-model="birthdate">
+                <span v-else>{{  birthdate  }}</span>
                 </p>
             <p id="bio">
                  Bio: 
-                 <input v-if="edit" type="text" v-model="bio">
-                <span v-else>{{  bio  }}</span>
+                <textarea class="bio" v-if="edit" type="text" v-model="bio"></textarea>
+                <span class="bio" v-else>{{  bio  }}</span>
                 </p>
             <p id="follow">
                <span id="following">following : 2</span>
@@ -30,6 +30,19 @@
             <portrait-set  v-if="edit" id="portrait-set"></portrait-set>
         </div>
         <span id="submit" v-if="edit" @click="signUpUser">Submit</span>
+        <span id="password" v-if="edit" @click="inputPassword">Delete</span>
+        <div v-if="deleteShow" id="deleteConfirm">
+            <h2 v-if="deleteFalse == 'failed'">Delete failed!</h2>
+            <h2 v-else-if="deleteFalse == 'success'">Delete Success!</h2>
+            <div v-else>
+               <p>Please input your password:</p>
+               <input  type="password" v-model="password">
+               <div id="btns">
+                  <span id="deleteBTN" @click="back">Back</span>
+                  <span id="deleteBTN" @click="deleteUser">Delete</span>
+               </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -47,19 +60,20 @@ import signUpApi from "axios"
             return {
                 user: "name",
                 email:"email",
-                birthday: "birthday",
+                birthdate: "birthdate",
                 bio: "bio",
                 edit: false,
+                deleteShow:false,
+                deleteFalse:"on",
+                password:"123321",
             }
         },
         methods: {           
             loading(){
                 this.user = this.userinfo.username,
                 this.email = this.userinfo.email,
-                this.birthday = this.userinfo.birthdate,
+                this.birthdate = this.userinfo.birthdate,
                 this.bio = this.userinfo.bio
-                console.log("1")
-                console.log(this.userinfo)
             },
             signUpUser() {
                 signUpApi.request({
@@ -72,8 +86,7 @@ import signUpApi from "axios"
                   data:{
                     "loginToken": this.token,
                     "email":this.email,
-                    "username":this.username,
-                    "password":this.password,
+                    "username":this.user,
                     "birthdate":this.birthdate,
                     "bio":this.bio
                   }
@@ -84,8 +97,44 @@ import signUpApi from "axios"
                     location.reload();
                 }).catch((error)=>{
                     console.log(error)
-                })
-                
+                })    
+            },
+            inputPassword(){
+                this.deleteShow = "password"
+            },
+            back(){
+                this.deleteShow = false;
+            },
+            deleteUser() {
+                signUpApi.request({
+                  url:"https://tweeterest.ml/api/users",
+                  method:"delete",
+                  headers:{
+                    "Content-Type":"application/json",
+                    "X-Api-Key":"57WHq4ZjcDWSNiAIozIGNNzXKiPExaSL5CIoZ51rYk1YT"
+                  },
+                  data:{
+                    "loginToken": this.token,
+                    "password": this.password
+                  }
+                }).then(()=>{
+                    this.deleteFalse = "success";
+                    setTimeout(() => {
+                        cookies.remove("logininfo");
+                        cookies.remove("loginToken");
+                         this.$store.commit("clearAllTweet")
+                         this.$store.commit("signUpHide")
+                         this.$router.push("/signin");
+                    }, 1000);
+                }).catch((error)=>{
+                    console.log(error)
+                    this.deleteFalse = "failed";
+                    setTimeout(() => {
+                        this.deleteShow = false;
+                        this.deleteFalse = "on";
+                    }, 1000);
+                    
+                })    
             }
         },
          computed: {
@@ -104,6 +153,7 @@ import signUpApi from "axios"
         },
          mounted () {
             this.loading();
+            console.log(this.deleteShow)
         }
     }
 </script>
@@ -130,11 +180,16 @@ import signUpApi from "axios"
             position: relative;
             left: 10vw;
             p{
+            width: 70%;
               font-size: 1.2rem;
               margin-bottom: 2vh;
             }
         }
-        #submit{
+     .bio{
+         width: 50vw;
+         height: 20vw;
+     }
+        #submit, #password{
             position: relative;
             background-color: #B2F7EF;
             border: none;
@@ -151,6 +206,34 @@ import signUpApi from "axios"
         #portrait-set{
             width: 70vw;
 
+        }
+        #deleteConfirm{
+            box-sizing: border-box;
+            padding: 30px;
+            border-radius: 30px;
+            background-color: white;
+            filter: drop-shadow(2px 2px 5px gray);
+            position: fixed;
+            top: 30vh;
+            width: 60%;
+            left: 20%;
+            #btns{
+                display: flex;
+                justify-content: space-evenly;
+                #deleteBTN{
+                border: none;
+                color: white;
+                padding: 0.4rem;
+                border-radius: 04rem;
+                margin-top: 2vh;
+                position: relative;
+                background-color: #B2F7EF;
+                filter: drop-shadow(2px 2px 5px gray);
+                &:active{
+                filter: none;
+            }
+            }
+            }
         }
     }
 @media only screen and (min-width:760px){
@@ -170,18 +253,29 @@ import signUpApi from "axios"
               transform: scale(1.2);
             }
         }
-        #submit{
-       
-            transform: scale(1.2);
-            margin-left:25vw;
-            top: 2vh;
+         .bio{
+         width: 30vw;
+         height: 10vw;
+        }
+        #submit, #password{       
+          font-size: 1.5rem;
+          margin-left:20vw;   
+          top: -6vh;
         }
         #portrait-set{
             position: relative;
             left: -12vw;
         }
-      
+       #deleteConfirm{
+           p,input{
+               width: 100%;
+               font-size: 1.2rem;
+           }
+            width: 35%;
+            left: 37%;
+        }
     }
+
 }
 @media only screen and (min-width:1366px) {
      #profile-show{
@@ -202,9 +296,17 @@ import signUpApi from "axios"
               transform: scale(1.2);
             }
         }
-        #submit{
-            transform: scale(3);
-            top: -20vh;
+        .bio{
+         width: 15vw;
+         height: 8vw;
+     }
+         #submit{       
+          margin-left:25vw;   
+          top: -12vh;  
+        }
+        #password{       
+          margin-left:10vw;    
+          top: -12vh; 
         }
         #portrait-set{
             position: relative;
@@ -212,7 +314,10 @@ import signUpApi from "axios"
             left: 20vw;
             top: -30vh;
         }
-      
+          #deleteConfirm{
+            width: 20%;
+            left: 40%;
+        }
     }
 }
 </style>

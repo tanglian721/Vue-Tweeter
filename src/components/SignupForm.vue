@@ -25,13 +25,13 @@ import cookies from "vue-cookies"
                 email: "",
                 username:"",
                 password:"",
-                birthdate:"",
+                birthdate:"YYYY-MM-DD",
                 bio:""
             }
         },
         methods: {
             signUpUser() {
-                cookies.set(this.username,"https://lh3.googleusercontent.com/proxy/9XZYVuKFypmvgMtHjyGgSxv_zZt8SIELb0nn--fBs5PujupfZRt7KkfdXATjENtj8YNxQNLwC4VJBRb8Q7VJq4MWtYQwnjk3EWaeK2MD544vf1o")
+                cookies.set(this.username,this.$store.state.portrait[0].path)
                 signUpApi.request({
                   url:"https://tweeterest.ml/api/users",
                   method:"post",

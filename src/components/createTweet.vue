@@ -2,7 +2,7 @@
   <div id="create-tweet">
     <img id="delete" src="../assets/delete.png" alt="" @click="backHome">
     <div v-if="submit === 'on'" id="text-area">
-       <img id="userImg" src="../assets/user (2).png">
+       <img id="userImg" :src= Imgpath>
        <div id="new-tweet" contenteditable="true" @blur="onEdit" v-html="textContent" @keypress.@="getusers" @keypress.#="hashTag">
        </div>
        <div id="users" v-if="usersdisplay">
@@ -12,6 +12,7 @@
            <input  @click="hashTagEnd" id="hashTag-text" v-model="hashText" @keydown.enter="hashTagEnd">
            <p class="hashTags" v-for="hashTag in hashTags" :key="hashTag.tag" @click="tag(hashTag.tag)">#{{ hashTag.tag }}</p>  
         </div>
+    </div>
         <div class="message" v-else-if="submit === true">
            <h2 >Tweet Created Sucessful!</h2>
            <span @click="backHome" >Back</span>   
@@ -21,7 +22,6 @@
            <span @click="reCreate" >Write Again</span>   
         </div>
         <button id="submit" @click="createTweet">tweet</button>
-  </div>
   </div>
 </template>
 
@@ -139,9 +139,17 @@ export default {
             },
             hashTags(){
                  return this.$store.getters.hashtagTopic
+            },
+            Imgpath() { if(cookies.get(cookies.get("logininfo").username)!= undefined){
+                return cookies.get(cookies.get("logininfo").username) 
+            } else {
+                return this.$store.state.portrait[0].path
             }
+            },
         },
         mounted () {
+            console.log(this.Imgpath);
+            console.log(cookies.get(cookies.get("logininfo").username))
         }
     }
 </script>
@@ -161,7 +169,7 @@ export default {
         #userImg{
             width: 10vw;
             margin-left: 5%;
-
+            border-radius: 50%;
             position: absolute;
             top: 0;
         }

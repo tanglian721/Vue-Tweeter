@@ -5,11 +5,11 @@
             <p id="user">{{ user }}</p>
             <p id="email">{{ email }}</p>
             <p id="birthday">{{ birthday }}</p>
-            <p id="bio">{{ bio }}</p>
             <p id="follow">
-               <span id="following">following : {{ following }}</span><br class="tablet">
-               <span id="follower"> follower : {{ follower }}</span>
+               <span id="following">Following : {{ following }}</span><br class="tablet">
+               <span id="follower"> Follower : {{ follower }}</span>
             </p>
+            <p id="bio">{{ bio }}</p>
         </div>
         <div class="tablet">
         <!-- <bottom-bar ></bottom-bar> -->
@@ -84,7 +84,6 @@ import cookies from "vue-cookies"
                 cookies.remove("logininfo");
                 cookies.remove("loginToken");
                 this.$store.commit("clearAllTweet")
-
                 this.$router.push("/signin");
             },
             userPage() {
@@ -228,14 +227,16 @@ button{
         position: relative;
         width:12vw;
         left: 4vw;
-        top: 10vw;
+        top: 5vw;
     }
     #userInfo{
         box-sizing: border-box;
-        width: 100%;
-        margin-top: 5vh;
+        width: 90%;
+        margin-top: 0;
+        overflow: hidden;
+        max-height: 25vh;
         p{
-           margin: 1vh 3vw;
+           margin: 1vh 1vw;
            padding: 0;
         }
         border-bottom: 1px solid rgba($color: #000000, $alpha: 0.5);

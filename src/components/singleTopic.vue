@@ -16,12 +16,9 @@
         },
         methods: {
             toOnetopicPage(){
-                // console.log(this.$router.history.current.path.slice(0,7));
-                // if( this.$router.history.current.path.slice(0,7) == '/topic/'){
+                
                 this.$router.push("/topic/" + this.Tweet.tag)
-                this.$store.commit('detailTopic', this.Tweet.tag );
-                // }else{
-                // }         
+                this.$store.commit('detailTopic', this.Tweet.tag );       
             },
         },
      
