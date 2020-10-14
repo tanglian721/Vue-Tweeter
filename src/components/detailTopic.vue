@@ -39,13 +39,18 @@ export default {
     tweets() {
       return this.$store.getters.tweetAllByDate;
     },
-
     topic() {
+      if(this.$store.state.topicTag == undefined || this.$store.state.topicTag !== this.$router.history.current.params.pathMatch){
+        return this.$router.history.current.params.pathMatch;
+      }else {
       return this.$store.state.topicTag;
-    }
+      }
+    },
+    
   },
   methods: {
     hashTagTweet(data) {
+      console.log(data);
       this.hashTweets = [];
       for (let i = 0; i < this.tweets.length; i++) {
         if (
@@ -64,6 +69,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$router.history)
     this.hashTagTweet(this.topic);
   }
 };
